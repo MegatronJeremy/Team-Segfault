@@ -1,3 +1,4 @@
+import time
 from threading import Thread, Event
 
 from src.constants import DEFAULT_ACTION_FILE
@@ -140,8 +141,8 @@ class Game(Thread):
     def run(self) -> None:
         try:
             self.__init_game_state()
-
             while not self.over.is_set():
+                # time.sleep(0.1)
                 if self.__next_round:
                     # start next round if need be
                     self.__start_next_round()

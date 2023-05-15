@@ -45,7 +45,6 @@ class Map:
         self.__path_finding_algorithm: callable = _a_star.a_star
 
         self.__current_turn: list[int] = current_turn
-        self.__player_order_by_idx: dict = {}
 
         if graphics:
             self.__map_drawer: MapDrawer = MapDrawer(client_map["size"], self.__players, self.__map, current_turn,
@@ -163,9 +162,6 @@ class Map:
             self.__update_capture_points()
         self.__update_repairs_and_catapult_bonus()
         self.__respawn_destroyed_tanks()
-
-    def set_order_by_idx(self, turn: int, idx: int) -> None:
-        self.__player_order_by_idx[turn] = idx
 
     """     MOVE & FIRE CONTROL        """
 

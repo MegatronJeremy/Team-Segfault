@@ -54,8 +54,6 @@ class BackupBot(Player):
         self._game_client.disconnect()
 
     def __place_actions(self) -> None:
-        if self._current_turn[0] <= self._num_players:
-            self._map.set_order_by_idx(self._current_turn[0], self.idx)
 
         for tank in self._tanks:
             locations: list[Callout] = []
