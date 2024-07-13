@@ -1,12 +1,15 @@
 import json
+import os
 from typing import Type
 
 
 class DataIO:
-    __training_data_path = "mab\\data\\training_data\\"
+    __script_path = os.path.dirname(__file__)
 
-    __client_map_path = "mab\\data\\server_data\\client_map"
-    __game_state_path = "mab\\data\\server_data\\game_state"
+    __training_data_path = os.path.join(__script_path, "training_data")
+
+    __client_map_path = os.path.join(__script_path, "server_data/client_map")
+    __game_state_path = os.path.join(__script_path, "server_data/game_state")
 
     ResultsTable = Type[dict[int, dict[str, list[int]]]]
 
@@ -66,25 +69,26 @@ class DataIO:
 
     @staticmethod
     def load_results_table(save_file: str) -> ResultsTable:
-        return DataIO.__load(DataIO.__training_data_path + save_file + '_results_table')
+        return DataIO.__load(DataIO.__training_data_path + '\\' + save_file + '_results_table')
 
     @staticmethod
     def load_num_games(save_file: str) -> int:
-        return DataIO.__load(DataIO.__training_data_path + save_file + '_num_games')
+        return DataIO.__load(DataIO.__training_data_path + '\\' + save_file + '_num_games')
 
     @staticmethod
     def load_best_actions(save_file: str) -> dict[int, str]:
-        return DataIO.__load(DataIO.__training_data_path + save_file + '_best_actions')
+        return DataIO.__load(DataIO.__training_data_path + '\\' + save_file + '_best_actions')
 
     @staticmethod
-    def load_client_map() -> dict: return DataIO.__load(DataIO.__client_map_path)
+    def load_client_map() -> dict:
+        return DataIO.__load(DataIO.__client_map_path)
 
     @staticmethod
-    def load_game_state() -> dict: return DataIO.__load(DataIO.__game_state_path)
+    def load_game_state() -> dict:
+        return DataIO.__load(DataIO.__game_state_path)
 
     @staticmethod
     def __load(from_where: str):
         with open(from_where + '.json', 'r') as file:
             what = json.load(file)
         return what
-

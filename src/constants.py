@@ -76,41 +76,50 @@ GAME_SPEED = [1.0]
 SOUND_VOLUME = [0.0]
 MAX_PLAYERS = 3
 DEFAULT_NUM_TURNS = 45
-# sound paths
-EXPLOSION_SOUND = 'src/assets/sounds/explosion.mp3'
-BULLET_SOUND = 'src/assets/sounds/shot.mp3'
 
-# font paths
-MENU_FONT = 'src/assets/menu/BrunoAceSC-Regular.ttf'
+import os
+
+# get the directory where the current script is located
+SCRIPT_DIR = os.path.dirname(__file__)
+
+# define the base directory for the assets
+ASSETS_LOCATION = os.path.join(SCRIPT_DIR, '../assets')
+
+# sound paths
+EXPLOSION_SOUND = os.path.join(ASSETS_LOCATION, 'sounds', 'explosion.mp3')
+BULLET_SOUND = os.path.join(ASSETS_LOCATION, 'sounds', 'shot.mp3')
+
+# font path
+MENU_FONT = os.path.join(ASSETS_LOCATION, 'menu', 'BrunoAceSC-Regular.ttf')
 
 # image paths
-TANK_ICON_PATH = 'src/assets/tank_icon.png'
-SPG_IMAGE_PATH = 'src/assets/tank_classes/spg.png'
-HT_IMAGE_PATH = 'src/assets/tank_classes/ht.png'
-LT_IMAGE_PATH = 'src/assets/tank_classes/lt.png'
-MT_IMAGE_PATH = 'src/assets/tank_classes/mt.png'
-TD_IMAGE_PATH = 'src/assets/tank_classes/td.png'
+TANK_ICON_PATH = os.path.join(ASSETS_LOCATION, 'tank_icon.png')
+SPG_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'tank_classes', 'spg.png')
+HT_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'tank_classes', 'ht.png')
+LT_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'tank_classes', 'lt.png')
+MT_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'tank_classes', 'mt.png')
+TD_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'tank_classes', 'td.png')
 
-CATAPULT_IMAGE_PATH = 'src/assets/bonuses/catapult.png'
-LIGHT_REPAIR_IMAGE_PATH = 'src/assets/bonuses/light_repair.png'
-HARD_REPAIR_IMAGE_PATH = 'src/assets/bonuses/hard_repair.png'
+CATAPULT_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'bonuses', 'catapult.png')
+LIGHT_REPAIR_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'bonuses', 'light_repair.png')
+HARD_REPAIR_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'bonuses', 'hard_repair.png')
 
-FLAG_PATH = 'src/assets/flag.png'
-EXPLOSION_IMAGES = [f'src/assets/explosion_images/{i}.png' for i in range(7)]
-BULLET_IMAGE_PATH = 'src/assets/white_bullet.png'
+FLAG_PATH = os.path.join(ASSETS_LOCATION, 'flag.png')
+EXPLOSION_IMAGES = [os.path.join(ASSETS_LOCATION, 'explosion_images', f'{i}.png') for i in range(7)]
+BULLET_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'white_bullet.png')
 
-BACKGROUND_IMAGE_PATH = 'src/assets/menu/background.jpg'
-GUI_ICON_PATH = 'src/assets/icon.png'
-TRACKS_IMAGE_PATH = 'src/assets/tracks_green.png'
-TROPHY_IMAGE_PATH = 'src/assets/trophy.png'
+BACKGROUND_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'menu', 'background.jpg')
+GUI_ICON_PATH = os.path.join(ASSETS_LOCATION, 'icon.png')
+TRACKS_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'tracks_green.png')
+TROPHY_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'trophy.png')
 
 # map hexes
-SUMMER_GRASS_PATH = 'src/assets/hex_images/summer_empty.png'
-SUMMER_OBSTACLE_PATH = 'src/assets/hex_images/summer_obstacle.png'
-DESERT_EMPTY_PATH = 'src/assets/hex_images/desert_empty.png'
-DESERT_OBSTACLE_PATH = 'src/assets/hex_images/desert_obstacle.png'
-WINTER_EMPTY_PATH = 'src/assets/hex_images/winter_empty.png'
-WINTER_OBSTACLE_PATH = 'src/assets/hex_images/winter_obstacle.png'
+SUMMER_GRASS_PATH = os.path.join(ASSETS_LOCATION, 'hex_images', 'summer_empty.png')
+SUMMER_OBSTACLE_PATH = os.path.join(ASSETS_LOCATION, 'hex_images', 'summer_obstacle.png')
+DESERT_EMPTY_PATH = os.path.join(ASSETS_LOCATION, 'hex_images', 'desert_empty.png')
+DESERT_OBSTACLE_PATH = os.path.join(ASSETS_LOCATION, 'hex_images', 'desert_obstacle.png')
+WINTER_EMPTY_PATH = os.path.join(ASSETS_LOCATION, 'hex_images', 'winter_empty.png')
+WINTER_OBSTACLE_PATH = os.path.join(ASSETS_LOCATION, 'hex_images', 'winter_obstacle.png')
 
 # other
 BULLET_VECTOR = (1, 0)
