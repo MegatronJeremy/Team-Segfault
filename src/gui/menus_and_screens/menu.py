@@ -3,9 +3,10 @@ import pygame_menu
 
 from src.constants import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
-    MAX_PLAYERS
+    MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE
 from src.game_presets.game_type_enum import GameType
 from src.gui.map_utils.map_type_enum import MapType
+from src.gui.menus_and_screens.menu_utils import play_menu_music
 
 
 class Menu:
@@ -16,6 +17,7 @@ class Menu:
         self.__menu_height = menu_height
 
         self.__create_menu_theme()
+
         # submenus need to be created before main menu
         self.__create_options_menu()
         self.__create_multiplayer_menu()
@@ -24,6 +26,31 @@ class Menu:
         self.__create_main_menu()
 
         self.__is_enabled = self.__main_menu.is_enabled()
+
+    """Menu callbacks"""
+
+    @staticmethod
+    def __set_advanced_graphics(value: bool) -> None:
+        ADVANCED_GRAPHICS[0] = value
+
+    @staticmethod
+    def __set_map_type(map_type: tuple[str, int], value: int) -> None:
+        MAP_TYPE[0] = value
+
+    @staticmethod
+    def __set_game_speed(value: float) -> None:
+        GAME_SPEED[0] = value
+
+    @staticmethod
+    def __set_sound_volume(value: float) -> None:
+        SOUND_VOLUME[0] = value
+
+    @staticmethod
+    def __set_music_volume(value: float) -> None:
+        MUSIC_VOLUME[0] = value
+        pygame.mixer.music.set_volume(value)
+
+    """Menu creation"""
 
     def __create_main_menu(self) -> None:
         self.__main_menu: pygame_menu.Menu = pygame_menu.Menu('Main menu', self.__menu_width, self.__menu_height,
@@ -39,18 +66,27 @@ class Menu:
         if self.__main_menu.get_width() < MENU_MIN_WIDTH:
             self.__main_menu.resize(MENU_MIN_WIDTH, self.__main_menu.get_height())
 
+        play_menu_music(MENU_THEME, MUSIC_VOLUME[0])
+
     def __create_options_menu(self) -> None:
         self.__options_menu: pygame_menu.Menu = pygame_menu.Menu('Options', self.__menu_width, self.__menu_height,
                                                                  theme=self.__menu_theme, mouse_motion_selection=True)
         self.__options_menu.add.toggle_switch('Advanced graphics: ', default=ADVANCED_GRAPHICS[0],
-                                              toggleswitch_id='graphics')
+                                              toggleswitch_id='graphics',
+                                              onchange=self.__set_advanced_graphics)
         self.__options_menu.add.selector('Game map ', [(map_type.name, map_type.value) for map_type in MapType],
                                          selector_id='map_type', style='fancy',
-                                         style_fancy_bgcolor=SELECTOR_WIDGET_COLOR)
+                                         style_fancy_bgcolor=SELECTOR_WIDGET_COLOR,
+                                         onchange=self.__set_map_type)
         self.__options_menu.add.range_slider('Game speed', default=GAME_SPEED[0], range_values=(0, 1), increment=0.1,
-                                             rangeslider_id='game_speed_slider')
-        self.__options_menu.add.range_slider('Volume', default=SOUND_VOLUME[0], range_values=(0, 1),
-                                             increment=0.1, rangeslider_id='volume_slider')
+                                             rangeslider_id='game_speed_slider',
+                                             onchange=self.__set_game_speed)
+        self.__options_menu.add.range_slider('Sound volume', default=SOUND_VOLUME[0], range_values=(0, 1),
+                                             increment=0.1, rangeslider_id='sound_volume_slider',
+                                             onchange=self.__set_sound_volume)
+        self.__options_menu.add.range_slider('Music volume', default=MUSIC_VOLUME[0], range_values=(0, 1),
+                                             increment=0.1, rangeslider_id='music_volume_slider',
+                                             onchange=self.__set_music_volume)
         self.__options_menu.add.button('Back', pygame_menu.events.BACK)
         Menu.set_menu_size(self.__options_menu)
 
@@ -121,6 +157,8 @@ class Menu:
         else:
             game_type = GameType.ONLINE
 
+        play_menu_music(BATTLE_THEME, MUSIC_VOLUME[0] * 2)
+
         self.__start_game_function(game_type=game_type,
                                    is_full=self.__local_game_menu.get_widget('full_game').get_value(),
                                    use_advanced_ai=self.__local_game_menu.get_widget('advanced_ai').get_value(),
@@ -131,6 +169,7 @@ class Menu:
         self.__main_menu.disable()
 
     def enable(self) -> None:
+        play_menu_music(MENU_THEME, MUSIC_VOLUME[0])
         self.__main_menu.enable()
 
     def draw(self, screen) -> None:
@@ -143,7 +182,7 @@ class Menu:
     def is_enabled(self) -> bool:
         return self.__main_menu.is_enabled()
 
-    """Multiplayer optoions"""
+    """Multiplayer options"""
 
     @property
     def game_name(self) -> str:
@@ -162,22 +201,6 @@ class Menu:
         return self.__multiplayer_menu.get_widget('observer').get_value()
 
     """Global options"""
-
-    @property
-    def volume(self) -> float:
-        return self.__options_menu.get_widget('volume_slider').get_value()
-
-    @property
-    def game_speed(self) -> float:
-        return self.__options_menu.get_widget('game_speed_slider').get_value()
-
-    @property
-    def advanced_graphics(self) -> bool:
-        return self.__options_menu.get_widget('graphics').get_value()
-
-    @property
-    def map_type(self) -> int:
-        return self.__options_menu.get_widget('map_type').get_value()[0][1]
 
     @staticmethod
     def set_menu_size(menu: pygame_menu.Menu) -> None:

@@ -4,7 +4,7 @@ import pygame.draw
 from pygame import font
 
 from src.constants import FPS_MAX, SCREEN_WIDTH, SCREEN_HEIGHT, BACKGROUND_IMAGE_PATH, GUI_ICON_PATH, \
-    GAME_BACKGROUND, GUI_CAPTION, MAP_TYPE, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y
+    GAME_BACKGROUND, GUI_CAPTION, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y
 from src.game_presets.local_game import local_game
 from src.game_presets.online_game import online_game
 from src.gui.menus_and_screens.end_screen import EndScreen
@@ -28,6 +28,7 @@ class DisplayManager:
 
         self.__running = True
         self.__playing = False
+        self.__music_paused = False
 
         self.__game = game
 
@@ -53,16 +54,21 @@ class DisplayManager:
             self.__playing = True
             self.__game.start()
 
+    def __pause_music(self) -> None:
+        if not self.__music_paused:
+            self.__music_paused = True
+            pygame.mixer.music.pause()
+
+    def __unpause_music(self) -> None:
+        if self.__music_paused:
+            self.__music_paused = False
+            pygame.mixer.music.unpause()
+
     def __start_the_game(self, game_type: GameType, is_full: bool, use_advanced_ai: bool,
                          num_players: int = 1,
                          num_turns: int | None = None) -> None:
         del self.__game
         self.__menu.disable()
-
-        SOUND_VOLUME[0] = self.__menu.volume
-        GAME_SPEED[0] = self.__menu.game_speed
-        ADVANCED_GRAPHICS[0] = self.__menu.advanced_graphics
-        MAP_TYPE[0] = self.__menu.map_type
 
         if game_type == GameType.LOCAL:
             self.__game = local_game(num_players=num_players, use_advanced_ai=use_advanced_ai,
@@ -126,8 +132,12 @@ class DisplayManager:
             # draw the map or loading screen if the game started
             if self.__playing and not self.__game.over.is_set():
                 players = self.__game.player_wins_and_info
-                self.__game.game_map.draw(self.__screen, self.__game.current_round) if self.__game.game_map \
-                    else self.__loading_screen.draw(self.__screen)
+                if self.__game.game_map:
+                    self.__unpause_music()
+                    self.__game.game_map.draw(self.__screen, self.__game.current_round)
+                else:
+                    self.__pause_music()
+                    self.__loading_screen.draw(self.__screen)
 
             # check if game has ended
             if self.__playing and self.__game.over.is_set():

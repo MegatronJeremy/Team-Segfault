@@ -74,6 +74,7 @@ PLAYER_NAMES = ['Playa', 'Bot 1', 'Bot 2', 'Bot 3']
 # game speed range is [0.0 - 1.0]; represents (1 - game_speed) seconds sleep between turns
 GAME_SPEED = [1.0]
 SOUND_VOLUME = [0.1]
+MUSIC_VOLUME = [0.1]
 MAX_PLAYERS = 3
 DEFAULT_NUM_TURNS = 45
 
@@ -88,6 +89,11 @@ ASSETS_LOCATION = os.path.join(SCRIPT_DIR, '../assets')
 # sound paths
 EXPLOSION_SOUND = os.path.join(ASSETS_LOCATION, 'sounds', 'explosion.mp3')
 BULLET_SOUND = os.path.join(ASSETS_LOCATION, 'sounds', 'shot.mp3')
+
+# music paths
+MENU_THEME = os.path.join(ASSETS_LOCATION, 'music', 'Menu-Theme.mp3')
+BATTLE_THEME = os.path.join(ASSETS_LOCATION, 'music', 'Battle-Theme.mp3')
+VICTORY_THEME = os.path.join(ASSETS_LOCATION, 'music', 'Fanfare.mp3')
 
 # font path
 MENU_FONT = os.path.join(ASSETS_LOCATION, 'menu', 'BrunoAceSC-Regular.ttf')

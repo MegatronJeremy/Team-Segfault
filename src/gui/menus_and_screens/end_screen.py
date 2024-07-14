@@ -2,7 +2,8 @@ import pygame
 from pygame import Surface
 
 from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, TANK_ICON_PATH, PODIUM_COLORS, PODIUM_WIDTH, PODIUM_SCALE, \
-    TROPHY_IMAGE_PATH, MENU_FONT
+    TROPHY_IMAGE_PATH, MENU_FONT, VICTORY_THEME, MUSIC_VOLUME
+from src.gui.menus_and_screens.menu_utils import play_menu_music
 
 
 class EndScreen:
@@ -78,6 +79,7 @@ class EndScreen:
         self.__enabled = False
 
     def enable(self) -> None:
+        play_menu_music(VICTORY_THEME, MUSIC_VOLUME[0] * 2)
         self.__enabled = True
 
     @property
