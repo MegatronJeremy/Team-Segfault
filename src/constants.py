@@ -73,7 +73,7 @@ PLAYER_NAMES = ['Playa', 'Bot 1', 'Bot 2', 'Bot 3']
 # game options
 # game speed range is [0.0 - 1.0]; represents (1 - game_speed) seconds sleep between turns
 GAME_SPEED = [1.0]
-SOUND_VOLUME = [0.0]
+SOUND_VOLUME = [0.1]
 MAX_PLAYERS = 3
 DEFAULT_NUM_TURNS = 45
 

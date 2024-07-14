@@ -18,7 +18,7 @@ class Callout(IntEnum):
     REPAIR = 5
 
 
-class BackupBot(Player):
+class AdvancedBot(Player):
     """To use this class, change the import in player_factory.py to this class instead of bot_player"""
 
     def __init__(self, turn_played_sem: Semaphore, current_player: list[int], current_turn: list[int],

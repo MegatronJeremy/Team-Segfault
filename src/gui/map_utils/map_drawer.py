@@ -93,6 +93,12 @@ class MapDrawer:
         text_rect = text.get_rect(midbottom=(SCREEN_WIDTH // 2, SCREEN_HEIGHT))
         screen.blit(text, text_rect)
 
+        # display fps
+        fps = pygame.time.Clock().get_fps()
+        text = self.__font.render('FPS: ' + str(fps) + ' ', True, WHITE)
+        text_rect = text.get_rect(bottomright=(SCREEN_WIDTH, SCREEN_HEIGHT))
+        screen.blit(text, text_rect)
+
         # draw map legend
         self.__feature_drawer.draw_legend(screen, self.__font)
 

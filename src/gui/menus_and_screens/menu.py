@@ -60,11 +60,12 @@ class Menu:
                                                                     onclose=pygame_menu.events.BACK,
                                                                     mouse_motion_selection=True, menu_id='local')
         self.__local_game_menu.add.button('Battle!', self.__battle)
-        self.__local_game_menu.add.toggle_switch('Full game', default=True, toggleswitch_id='full_game')
-        self.__local_game_menu.add.range_slider('Number of players', default=MAX_PLAYERS, rangeslider_id='num_players',
-                                                range_values=[i for i in range(1, MAX_PLAYERS + 1)], increment=1)
         self.__local_game_menu.add.text_input('Number of turns: ', input_type=pygame_menu.locals.INPUT_INT, maxchar=2,
                                               textinput_id='num_turns')
+        self.__local_game_menu.add.range_slider('Number of players', default=MAX_PLAYERS, rangeslider_id='num_players',
+                                                range_values=[i for i in range(1, MAX_PLAYERS + 1)], increment=1)
+        self.__local_game_menu.add.toggle_switch('Advanced AI', default=True, toggleswitch_id='advanced_ai')
+        self.__local_game_menu.add.toggle_switch('Full game', default=True, toggleswitch_id='full_game')
         self.__local_game_menu.add.button('Back', pygame_menu.events.BACK)
 
         Menu.set_menu_size(self.__local_game_menu)
@@ -85,6 +86,7 @@ class Menu:
                                                textinput_id='num_turns')
         self.__multiplayer_menu.add.range_slider('Number of players', default=MAX_PLAYERS, rangeslider_id='num_players',
                                                  range_values=[i for i in range(1, MAX_PLAYERS + 1)], increment=1)
+        self.__multiplayer_menu.add.toggle_switch('Advanced AI', default=True, toggleswitch_id='advanced_ai')
         self.__multiplayer_menu.add.toggle_switch('Full game', default=True, toggleswitch_id='full_game')
         self.__multiplayer_menu.add.toggle_switch('Observer', default=False, toggleswitch_id='observer',
                                                   state_text=('No', 'Yes'))
@@ -112,16 +114,18 @@ class Menu:
         self.__menu_theme.widget_font = MENU_FONT
 
     def __battle(self) -> None:
+        game_type: GameType
+
         if pygame_menu.Menu.get_current(self.__main_menu).get_id() == 'local':
-            self.__start_game_function(game_type=GameType.LOCAL,
-                                       is_full=self.__local_game_menu.get_widget('full_game').get_value(),
-                                       num_players=self.__local_game_menu.get_widget('num_players').get_value(),
-                                       num_turns=int(self.__local_game_menu.get_widget('num_turns').get_value()))
+            game_type = GameType.LOCAL
         else:
-            self.__start_game_function(game_type=GameType.ONLINE,
-                                       is_full=self.__multiplayer_menu.get_widget('full_game').get_value(),
-                                       num_players=self.__multiplayer_menu.get_widget('num_players').get_value(),
-                                       num_turns=int(self.__multiplayer_menu.get_widget('num_turns').get_value()))
+            game_type = GameType.ONLINE
+
+        self.__start_game_function(game_type=game_type,
+                                   is_full=self.__local_game_menu.get_widget('full_game').get_value(),
+                                   use_advanced_ai=self.__local_game_menu.get_widget('advanced_ai').get_value(),
+                                   num_players=self.__local_game_menu.get_widget('num_players').get_value(),
+                                   num_turns=int(self.__local_game_menu.get_widget('num_turns').get_value()))
 
     def disable(self) -> None:
         self.__main_menu.disable()

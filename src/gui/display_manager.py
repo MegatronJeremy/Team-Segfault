@@ -1,6 +1,7 @@
 import os
 
 import pygame.draw
+from pygame import font
 
 from src.constants import FPS_MAX, SCREEN_WIDTH, SCREEN_HEIGHT, BACKGROUND_IMAGE_PATH, GUI_ICON_PATH, \
     GAME_BACKGROUND, GUI_CAPTION, MAP_TYPE, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y
@@ -52,7 +53,8 @@ class DisplayManager:
             self.__playing = True
             self.__game.start()
 
-    def __start_the_game(self, game_type: GameType, is_full: bool, num_players: int = 1,
+    def __start_the_game(self, game_type: GameType, is_full: bool, use_advanced_ai: bool,
+                         num_players: int = 1,
                          num_turns: int | None = None) -> None:
         del self.__game
         self.__menu.disable()
@@ -63,14 +65,14 @@ class DisplayManager:
         MAP_TYPE[0] = self.__menu.map_type
 
         if game_type == GameType.LOCAL:
-            self.__game = local_game(num_players=num_players, is_full=is_full,
-                                     num_turns=num_turns)
+            self.__game = local_game(num_players=num_players, use_advanced_ai=use_advanced_ai,
+                                     num_turns=num_turns, is_full=is_full)
         else:
             PLAYER_NAMES[0] = self.__menu.player_name
             GAME_NAME[0] = self.__menu.game_name
             self.__game = online_game(game_name=GAME_NAME[0], player_name=PLAYER_NAMES[0], num_players=num_players,
-                                      num_turns=num_turns, is_full=is_full, is_observer=self.__menu.observer,
-                                      password=self.__menu.password)
+                                      use_advanced_ai=use_advanced_ai, num_turns=num_turns, is_full=is_full,
+                                      is_observer=self.__menu.observer, password=self.__menu.password)
 
         self.__playing = True
         self.__game.start()
