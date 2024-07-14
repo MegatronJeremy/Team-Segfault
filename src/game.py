@@ -1,7 +1,7 @@
 from threading import Thread, Event
 
-from src.constants import DEFAULT_ACTION_FILE
 from src.game_map.map import Map
+from src.parameters import DEFAULT_ACTION_FILE
 from src.players.player import Player
 from src.players.player_manager import PlayerManager
 from src.remote.game_client import GameClient

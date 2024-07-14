@@ -1,7 +1,7 @@
 import pygame
 from pygame import Surface
 
-from src.constants import FLAG_PATH, TANK_ICON_PATH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE
+from src.parameters import FLAG_PATH, TANK_ICON_PATH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE
 
 
 class Scoreboard:

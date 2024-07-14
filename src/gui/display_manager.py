@@ -3,8 +3,6 @@ import os
 import pygame.draw
 from pygame import font
 
-from src.constants import FPS_MAX, SCREEN_WIDTH, SCREEN_HEIGHT, BACKGROUND_IMAGE_PATH, GUI_ICON_PATH, \
-    GAME_BACKGROUND, GUI_CAPTION, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y
 from src.game_presets.local_game import local_game
 from src.game_presets.online_game import online_game
 from src.gui.menus_and_screens.end_screen import EndScreen
@@ -12,6 +10,8 @@ from src.gui.menus_and_screens.error_screen import ErrorScreen
 from src.gui.menus_and_screens.helper_menu import HelperMenu
 from src.gui.menus_and_screens.loading_screen import LoadingScreen
 from src.gui.menus_and_screens.menu import *
+from src.parameters import FPS_MAX, FPS_CURRENT, SCREEN_WIDTH, SCREEN_HEIGHT, BACKGROUND_IMAGE_PATH, GUI_ICON_PATH, \
+    GAME_BACKGROUND, GUI_CAPTION, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'  # window at center
 
@@ -90,7 +90,6 @@ class DisplayManager:
                 # set the game end
                 if self.__game:
                     self.__game.over.set()
-                self.__playing = False
                 self.__running = False
         return events
 
@@ -156,6 +155,9 @@ class DisplayManager:
 
             if self.__error_screen.enabled:
                 self.__error_screen.draw_error(self.__screen)
+
+            # get the current fps
+            FPS_CURRENT[0] = int(self.__clock.get_fps())
 
             # delay for a constant framerate
             self.__clock.tick(FPS_MAX)

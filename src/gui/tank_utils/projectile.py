@@ -1,7 +1,7 @@
 import pygame
 from pygame import Surface
 
-from src.constants import BULLET_IMAGE_PATH, BULLET_SOUND, BULLET_VECTOR, SOUND_VOLUME, HEX_RADIUS_X, HEX_RADIUS_Y, \
+from src.parameters import BULLET_IMAGE_PATH, BULLET_SOUND, BULLET_VECTOR, SOUND_VOLUME, HEX_RADIUS_X, HEX_RADIUS_Y, \
     BULLET_TRAVEL_TIME
 
 

@@ -1,7 +1,7 @@
 import pygame
 from pygame import Surface
 
-from src.constants import SCREEN_WIDTH, MENU_FONT, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, SCREEN_HEIGHT
+from src.parameters import SCREEN_WIDTH, MENU_FONT, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, SCREEN_HEIGHT
 
 
 class ErrorScreen:

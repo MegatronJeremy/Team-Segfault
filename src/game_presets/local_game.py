@@ -1,8 +1,8 @@
 import random
 
-from src.constants import DEFAULT_NUM_TURNS
-from src.constants import PLAYER_NAMES
 from src.game import Game
+from src.parameters import DEFAULT_NUM_TURNS
+from src.parameters import PLAYER_NAMES
 
 
 def local_game(num_players: int = 3, use_advanced_ai: bool = True, num_turns: int = DEFAULT_NUM_TURNS,

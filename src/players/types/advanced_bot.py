@@ -3,9 +3,9 @@ import time
 from enum import IntEnum
 from threading import Semaphore, Event
 
-from src.constants import GAME_SPEED
 from src.entities.entity_enum import Entities
 from src.entities.tanks.tank import Tank
+from src.parameters import GAME_SPEED
 from src.players.player import Player
 
 

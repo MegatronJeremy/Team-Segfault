@@ -5,8 +5,6 @@ from pygame import Surface
 from pygame.font import Font
 from pygame.sprite import Sprite, Group
 
-from src.constants import SCREEN_WIDTH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE, MENU_FONT, MAP_FONT_SIZE_MULTIPLIER, \
-    ADVANCED_GRAPHICS, SCREEN_HEIGHT
 from src.entities.tanks.tank import Tank
 from src.game_map.hex import Hex
 from src.gui.map_utils.feature_drawer import FeatureDrawer
@@ -15,6 +13,8 @@ from src.gui.tank_utils.explosion import Explosion
 from src.gui.tank_utils.projectile import Projectile
 from src.gui.tank_utils.shot_tank import ShotTank
 from src.gui.tank_utils.tank_drawer import TankDrawer
+from src.parameters import SCREEN_WIDTH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE, MENU_FONT, MAP_FONT_SIZE_MULTIPLIER, \
+    ADVANCED_GRAPHICS, SCREEN_HEIGHT, FPS_CURRENT
 
 
 class MapDrawer:
@@ -94,9 +94,8 @@ class MapDrawer:
         screen.blit(text, text_rect)
 
         # display fps
-        fps = pygame.time.Clock().get_fps()
-        text = self.__font.render('FPS: ' + str(fps) + ' ', True, WHITE)
-        text_rect = text.get_rect(bottomright=(SCREEN_WIDTH, SCREEN_HEIGHT))
+        text = self.__font.render(f' FPS: {FPS_CURRENT[0]}', True, WHITE)
+        text_rect = text.get_rect(bottomleft=(0, SCREEN_HEIGHT))
         screen.blit(text, text_rect)
 
         # draw map legend

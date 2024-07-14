@@ -1,5 +1,5 @@
-from src.constants import DEFAULT_NUM_TURNS
 from src.game import Game
+from src.parameters import DEFAULT_NUM_TURNS
 
 
 def online_game(game_name: str, player_name: str, num_players: int = 1, use_advanced_ai: bool = True,

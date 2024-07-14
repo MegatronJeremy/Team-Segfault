@@ -1,6 +1,6 @@
-from src.constants import DEFAULT_SPAWN_COLOR
 from src.entities.entity_enum import Entities
 from src.entities.map_features.feature import Feature
+from src.parameters import DEFAULT_SPAWN_COLOR
 
 
 class Spawn(Feature):

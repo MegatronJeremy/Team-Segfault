@@ -1,7 +1,7 @@
 import pygame
 
-from src.constants import HEX_RADIUS_Y, HEX_RADIUS_X
 from src.game_map.hex import Hex
+from src.parameters import HEX_RADIUS_Y, HEX_RADIUS_X
 
 
 class TankDrawer(pygame.sprite.Sprite):

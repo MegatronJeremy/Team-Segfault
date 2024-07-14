@@ -1,11 +1,10 @@
-import random as rnd
 import time
 from threading import Semaphore, Event
 
 from mab.data.data_io import DataIO
-from src.constants import GAME_SPEED
 from src.entities.entity_enum import Entities
 from src.entities.tanks.tank import Tank
+from src.parameters import GAME_SPEED
 from src.players.player import Player
 
 

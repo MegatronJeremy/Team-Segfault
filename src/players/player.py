@@ -3,9 +3,9 @@ from abc import abstractmethod, ABC
 from dataclasses import dataclass
 from threading import Thread, Semaphore, Event
 
-from src.constants import PLAYER_COLORS
 from src.entities.tanks.tank import Tank
 from src.game_map.map import Map
+from src.parameters import PLAYER_COLORS
 from src.remote.game_client import GameClient
 
 

@@ -1,7 +1,7 @@
 import pygame
 import pygame_menu
 
-from src.constants import MENU_BACKGROUND_COLOR, MENU_FONT, WHITE, MENU_SELECTED_TEXT_COLOR, SCREEN_HEIGHT, \
+from src.parameters import MENU_BACKGROUND_COLOR, MENU_FONT, WHITE, MENU_SELECTED_TEXT_COLOR, SCREEN_HEIGHT, \
     SCREEN_WIDTH, PODIUM_SCALE
 
 

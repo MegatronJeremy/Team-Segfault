@@ -1,7 +1,6 @@
 from pygame import Surface
 
 from mab.data.data_io import DataIO
-from src.constants import HEX_RADIUS_X, HEX_RADIUS_Y, SCREEN_HEIGHT, SCREEN_WIDTH
 from src.entities.map_features.bonuses.catapult import Catapult
 from src.entities.map_features.bonuses.hard_repair import HardRepair
 from src.entities.map_features.bonuses.light_repair import LightRepair
@@ -14,6 +13,7 @@ from src.entities.tanks.tank_factory import TankFactory
 from src.game_map import _a_star
 from src.game_map.hex import Hex
 from src.gui.map_utils.map_drawer import MapDrawer
+from src.parameters import HEX_RADIUS_X, HEX_RADIUS_Y, SCREEN_HEIGHT, SCREEN_WIDTH
 
 
 class Map:

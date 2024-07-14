@@ -1,6 +1,6 @@
 from math import sqrt
 
-from src.constants import SCREEN_HEIGHT, SCREEN_WIDTH, HEX_RADIUS_Y, HEX_RADIUS_X
+from src.parameters import SCREEN_HEIGHT, SCREEN_WIDTH, HEX_RADIUS_Y, HEX_RADIUS_X
 
 
 class Hex:

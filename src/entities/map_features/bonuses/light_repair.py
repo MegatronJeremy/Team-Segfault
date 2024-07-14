@@ -1,6 +1,6 @@
-from src.constants import EMPTY_COLOR
 from src.entities.entity import Entities
 from src.entities.map_features.feature import Feature
+from src.parameters import EMPTY_COLOR
 
 
 class LightRepair(Feature):

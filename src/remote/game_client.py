@@ -1,7 +1,7 @@
 import json
 import struct
 
-from src.constants import HOST_PORT, HOST_NAME, BYTES_IN_INT
+from src.parameters import HOST_PORT, HOST_NAME, BYTES_IN_INT
 from src.remote.server_connection import ServerConnection
 from src.remote.server_enum import Action
 from src.remote.server_enum import Result

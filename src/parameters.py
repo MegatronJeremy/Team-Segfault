@@ -12,6 +12,7 @@ GAME_NAME = ['Test game']
 # gui constants
 GUI_CAPTION = 'Team Segfault'
 FPS_MAX = 60  # max frames per second
+FPS_CURRENT = [0]  # current frames per second
 SCREEN_SIZE = 250
 SCREEN_RATIO = (4, 3)
 SCREEN_WIDTH = SCREEN_RATIO[0] * SCREEN_SIZE

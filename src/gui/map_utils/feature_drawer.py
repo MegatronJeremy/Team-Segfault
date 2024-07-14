@@ -1,9 +1,6 @@
 import pygame
 from pygame import Surface
 
-from src.constants import MAP_TYPE, HEX_RADIUS_Y, HEX_RADIUS_X, LIGHT_REPAIR_IMAGE_PATH, HARD_REPAIR_IMAGE_PATH, \
-    TANK_IMAGE_SCALE, CATAPULT_IMAGE_PATH, HEX_TILE_IMAGES_SCALE, SUMMER_OBSTACLE_PATH, WHITE, BLACK, \
-    SUMMER_GRASS_PATH, DESERT_OBSTACLE_PATH, DESERT_EMPTY_PATH, WINTER_EMPTY_PATH, WINTER_OBSTACLE_PATH
 from src.entities.map_features.bonuses.catapult import Catapult
 from src.entities.map_features.bonuses.hard_repair import HardRepair
 from src.entities.map_features.bonuses.light_repair import LightRepair
@@ -11,6 +8,9 @@ from src.entities.map_features.landmarks.base import Base, Entities, Feature
 from src.entities.map_features.landmarks.empty import Empty
 from src.entities.map_features.landmarks.obstacle import Obstacle
 from src.gui.map_utils.map_type_enum import MapType
+from src.parameters import MAP_TYPE, HEX_RADIUS_Y, HEX_RADIUS_X, LIGHT_REPAIR_IMAGE_PATH, HARD_REPAIR_IMAGE_PATH, \
+    TANK_IMAGE_SCALE, CATAPULT_IMAGE_PATH, HEX_TILE_IMAGES_SCALE, SUMMER_OBSTACLE_PATH, WHITE, BLACK, \
+    SUMMER_GRASS_PATH, DESERT_OBSTACLE_PATH, DESERT_EMPTY_PATH, WINTER_EMPTY_PATH, WINTER_OBSTACLE_PATH
 
 
 class FeatureDrawer:

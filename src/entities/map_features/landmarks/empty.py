@@ -1,6 +1,6 @@
-from src.constants import EMPTY_COLOR
 from src.entities.entity_enum import Entities
 from src.entities.map_features.feature import Feature
+from src.parameters import EMPTY_COLOR
 
 
 class Empty(Feature):

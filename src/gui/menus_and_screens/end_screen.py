@@ -1,9 +1,9 @@
 import pygame
 from pygame import Surface
 
-from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT, TANK_ICON_PATH, PODIUM_COLORS, PODIUM_WIDTH, PODIUM_SCALE, \
-    TROPHY_IMAGE_PATH, MENU_FONT, VICTORY_THEME, MUSIC_VOLUME
 from src.gui.menus_and_screens.menu_utils import play_menu_music
+from src.parameters import SCREEN_WIDTH, SCREEN_HEIGHT, TANK_ICON_PATH, PODIUM_COLORS, PODIUM_WIDTH, PODIUM_SCALE, \
+    TROPHY_IMAGE_PATH, MENU_FONT, VICTORY_THEME, MUSIC_VOLUME
 
 
 class EndScreen:

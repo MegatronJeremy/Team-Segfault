@@ -1,9 +1,9 @@
 from abc import ABC
 
-from src.constants import HT_IMAGE_PATH
 from src.entities.map_features.bonuses.catapult import get_catapult_bonus_range
 from src.entities.tanks.tank import Tank
 from src.game_map.hex import Hex
+from src.parameters import HT_IMAGE_PATH
 
 
 class HeavyTank(Tank, ABC):
