@@ -6,6 +6,10 @@ Team members:
 - [Ricardo Suarez del Valle](https://github.com/RicardoSdV)
 - [Jovan Milanović](https://github.com/wanjoh)
 
+### Video demonstration 
+
+https://github.com/user-attachments/assets/5d29d5cd-763f-409b-a1de-836cb29fdd93
+
 ### Game description
 
 The game can have bot players, remote players, and observers.
