@@ -1,11 +1,5 @@
 # Team-Segfault
 
-Team members:
-
-- [Vuk Đorđević](https://github.com/MegatronJeremy)
-- [Ricardo Suarez del Valle](https://github.com/RicardoSdV)
-- [Jovan Milanović](https://github.com/wanjoh)
-
 ### Video demonstration 
 
 https://github.com/user-attachments/assets/5d29d5cd-763f-409b-a1de-836cb29fdd93
@@ -59,3 +53,9 @@ without it, in which case no window will be rendered, and only console output ca
 [Tank icon for pygame window](https://www.flaticon.com/free-icon/tank_3111508)
 
 [Tank tracks](https://www.dreamstime.com/tank-tracks-set-track-treads-isolated-white-various-caterpillar-impressed-heavy-vehicles-like-tractors-bulldozers-image198577121)
+
+### Team members:
+
+- [Vuk Đorđević](https://github.com/MegatronJeremy)
+- [Ricardo Suarez del Valle](https://github.com/RicardoSdV)
+- [Jovan Milanović](https://github.com/wanjoh)
