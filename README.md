@@ -6,8 +6,9 @@ https://github.com/user-attachments/assets/5d29d5cd-763f-409b-a1de-836cb29fdd93
 
 ### Game description
 
-The game can have bot players, remote players, and observers.
+The game can have local bot players, remote players from other machines connected to the main server, and observers.
 It is a turn-based strategy game played on a hexagonal map, with each player being assigned five different tanks.
+Other than tanks, each game can have unique powerups and obstacles placed on the map to be interacted with by the tanks. 
 Each game is uniquely identified by its name, and the same goes for each player joining that game.
 When starting the game you will be greeted by a menu screen where you can change the game configuration as you wish.
 After starting the game and waiting for all the players to join, a simulation will play out in which the different
