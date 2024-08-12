@@ -72,7 +72,7 @@ PODIUM_COLORS = ((255, 215, 0), (192, 192, 192), (205, 127, 50))
 PLAYER_NAMES = ['Playa', 'Bot 1', 'Bot 2', 'Bot 3']
 
 # game options
-# game speed range is [0.0 - 1.0]; represents (1 - game_speed) seconds sleep between turns
+# game speed range is [0.0 - 1.0]; represents (1 - game_speed) seconds slept between turns
 GAME_SPEED = [1.0]
 SOUND_VOLUME = [0.1]
 MUSIC_VOLUME = [0.1]

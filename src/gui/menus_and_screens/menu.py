@@ -78,7 +78,7 @@ class Menu:
                                          selector_id='map_type', style='fancy',
                                          style_fancy_bgcolor=SELECTOR_WIDGET_COLOR,
                                          onchange=self.__set_map_type)
-        self.__options_menu.add.range_slider('Game speed', default=GAME_SPEED[0], range_values=(0, 1), increment=0.1,
+        self.__options_menu.add.range_slider('Game speed', default=GAME_SPEED[0], range_values=(0.4, 1), increment=0.1,
                                              rangeslider_id='game_speed_slider',
                                              onchange=self.__set_game_speed)
         self.__options_menu.add.range_slider('Sound volume', default=SOUND_VOLUME[0], range_values=(0, 1),
