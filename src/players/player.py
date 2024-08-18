@@ -4,9 +4,9 @@ from dataclasses import dataclass
 from threading import Thread, Semaphore, Event
 
 from src.entities.tanks.tank import Tank
+from src.game_client import GameClient
 from src.game_map.map import Map
 from src.parameters import PLAYER_COLORS
-from src.remote.game_client import GameClient
 
 
 @dataclass

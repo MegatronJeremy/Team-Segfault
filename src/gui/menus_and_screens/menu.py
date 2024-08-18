@@ -21,8 +21,9 @@ class Menu:
         # submenus need to be created before main menu
         self.__create_options_menu()
         self.__create_multiplayer_menu()
-        self.__create_credits_menu()
         self.__create_local_game_menu()
+        self.__create_archived_game_menu()
+        self.__create_credits_menu()
         self.__create_main_menu()
 
         self.__is_enabled = self.__main_menu.is_enabled()
@@ -58,6 +59,7 @@ class Menu:
                                                               mouse_motion_selection=True)
         self.__main_menu.add.button('Play local game', self.__local_game_menu)
         self.__main_menu.add.button('Play multiplayer game', self.__multiplayer_menu)
+        self.__main_menu.add.button('Play archived game', self.__archived_game_menu)
         self.__main_menu.add.button('Options', self.__options_menu)
         self.__main_menu.add.button('Credits', self.__credits)
 
@@ -129,6 +131,16 @@ class Menu:
         self.__multiplayer_menu.add.button('Back', pygame_menu.events.BACK)
 
         Menu.set_menu_size(self.__multiplayer_menu)
+
+    def __create_archived_game_menu(self) -> None:
+        self.__archived_game_menu: pygame_menu.Menu = pygame_menu.Menu('Archived game', self.__menu_width,
+                                                                       self.__menu_height,
+                                                                       theme=self.__menu_theme,
+                                                                       onclose=pygame_menu.events.BACK,
+                                                                       mouse_motion_selection=True)
+        self.__archived_game_menu.add.button('Back', pygame_menu.events.BACK)
+
+        Menu.set_menu_size(self.__archived_game_menu)
 
     def __create_credits_menu(self) -> None:
         self.__credits: pygame_menu.Menu = pygame_menu.Menu('Credits', self.__menu_width, self.__menu_height,

@@ -1,11 +1,11 @@
 import queue
 from threading import Semaphore
 
+from src.game_client import GameClient
 from src.players.player import Player
 from src.players.player_factory import PlayerFactory, PlayerTypes
 from src.players.types.bot_player import BotPlayer
 from src.players.types.remote_player import RemotePlayer
-from src.remote.game_client import GameClient
 
 
 class PlayerManager:
