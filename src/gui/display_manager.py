@@ -3,8 +3,10 @@ import os
 import pygame.draw
 from pygame import font
 
+from src.game_presets.archived_game import archived_game
 from src.game_presets.local_game import local_game
 from src.game_presets.online_game import online_game
+from src.gui.control_utils.slider import Slider
 from src.gui.menus_and_screens.end_screen import EndScreen
 from src.gui.menus_and_screens.error_screen import ErrorScreen
 from src.gui.menus_and_screens.helper_menu import HelperMenu
@@ -70,15 +72,19 @@ class DisplayManager:
         del self.__game
         self.__menu.disable()
 
-        if game_type == GameType.LOCAL:
-            self.__game = local_game(num_players=num_players, use_advanced_ai=use_advanced_ai,
-                                     num_turns=num_turns, is_full=is_full)
-        else:
-            PLAYER_NAMES[0] = self.__menu.player_name
-            GAME_NAME[0] = self.__menu.game_name
-            self.__game = online_game(game_name=GAME_NAME[0], player_name=PLAYER_NAMES[0], num_players=num_players,
-                                      use_advanced_ai=use_advanced_ai, num_turns=num_turns, is_full=is_full,
-                                      is_observer=self.__menu.observer, password=self.__menu.password)
+        match game_type:
+            case GameType.LOCAL:
+                self.__game = local_game(num_players=num_players, use_advanced_ai=use_advanced_ai,
+                                         num_turns=num_turns, is_full=is_full)
+            case GameType.ONLINE:
+                PLAYER_NAMES[0] = self.__menu.player_name
+                GAME_NAME[0] = self.__menu.game_name
+                self.__game = online_game(game_name=GAME_NAME[0], player_name=PLAYER_NAMES[0], num_players=num_players,
+                                          use_advanced_ai=use_advanced_ai, num_turns=num_turns, is_full=is_full,
+                                          is_observer=self.__menu.observer, password=self.__menu.password)
+            case GameType.ARCHIVED:
+                self.__game = archived_game("test.replay")
+                self.__slider = Slider(10, 10, 400, 20, 0, 100, 50)
 
         self.__playing = True
         self.__game.start()
@@ -91,6 +97,8 @@ class DisplayManager:
                 if self.__game:
                     self.__game.over.set()
                 self.__running = False
+            if self.__game and self.__game.is_archived:
+                self.__slider.handle_event(event)
         return events
 
     def run(self) -> None:
@@ -107,6 +115,8 @@ class DisplayManager:
         while self.__running:
 
             self.__draw_background()
+            if self.__game and self.__game.is_archived:
+                self.__slider.draw(self.__screen)
             events = self.__check_events()
 
             # draw enabled menu
@@ -148,6 +158,8 @@ class DisplayManager:
 
                 self.__helper_menu.enable()
                 self.__end_screen.enable()
+
+                self.__finalize_game()
 
             # draw error/end screen
             if self.__end_screen.enabled:

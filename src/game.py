@@ -1,6 +1,8 @@
 from threading import Thread, Event
 
-from src.game_client import GameClient
+from src.game_client.game_client import GameClient
+from src.game_client.types.archived_client import ArchivedGameClient
+from src.game_client.types.remote_client import RemoteGameClient
 from src.game_map.map import Map
 from src.parameters import DEFAULT_ACTION_FILE
 from src.players.player import Player
@@ -9,7 +11,8 @@ from src.players.player_manager import PlayerManager
 
 class Game(Thread):
     def __init__(self, game_name: str | None = None, num_turns: int | None = None,
-                 max_players: int = 1, is_full: bool = False, use_ml_actions: bool = True) -> None:
+                 max_players: int = 1, is_full: bool = False, use_ml_actions: bool = True,
+                 is_archived_game: bool = False) -> None:
         super().__init__()
 
         self.game_map: Map | None = None
@@ -39,8 +42,11 @@ class Game(Thread):
         self.__current_round: int = 0
         self.__current_player: Player | None = None
 
+        self.__is_archived_game = is_archived_game
+
         # Observer connection that is used for collecting data
-        self.__shadow_client = GameClient()
+        self.__shadow_client = ArchivedGameClient("test.replay") if is_archived_game \
+            else RemoteGameClient(is_shadow_client=True)
 
         self.__active_players: dict[int, Player] = {}
         self.__player_wins: dict[int, int] = {}
@@ -129,6 +135,10 @@ class Game(Thread):
     @property
     def game_exited(self) -> Event:
         return self.__game_exited
+
+    @property
+    def is_archived(self) -> bool:
+        return self.__is_archived_game
 
     @property
     def player_wins_and_info(self) -> list[tuple[str | None, tuple, int]]:

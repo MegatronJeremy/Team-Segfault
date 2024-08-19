@@ -111,8 +111,8 @@ class Menu:
     def __create_multiplayer_menu(self) -> None:
         self.__multiplayer_menu: pygame_menu.Menu = pygame_menu.Menu('Play', self.__menu_width, self.__menu_height,
                                                                      theme=self.__menu_theme,
-                                                                     onclose=pygame_menu.events.BACK
-                                                                     , mouse_motion_selection=True)
+                                                                     onclose=pygame_menu.events.BACK,
+                                                                     mouse_motion_selection=True, menu_id='online')
         self.__multiplayer_menu.add.button('Battle!', self.__battle)
         self.__multiplayer_menu.add.text_input('Nickname: ', default=PLAYER_NAMES[0], textinput_id='nickname',
                                                maxwidth=10)
@@ -137,7 +137,9 @@ class Menu:
                                                                        self.__menu_height,
                                                                        theme=self.__menu_theme,
                                                                        onclose=pygame_menu.events.BACK,
-                                                                       mouse_motion_selection=True)
+                                                                       mouse_motion_selection=True, menu_id='archived')
+
+        self.__archived_game_menu.add.button('Battle!', self.__battle)
         self.__archived_game_menu.add.button('Back', pygame_menu.events.BACK)
 
         Menu.set_menu_size(self.__archived_game_menu)
@@ -164,10 +166,17 @@ class Menu:
     def __battle(self) -> None:
         game_type: GameType
 
-        if pygame_menu.Menu.get_current(self.__main_menu).get_id() == 'local':
-            game_type = GameType.LOCAL
-        else:
-            game_type = GameType.ONLINE
+        menu_id = pygame_menu.Menu.get_current(self.__main_menu).get_id()
+
+        match menu_id:
+            case 'local':
+                game_type = GameType.LOCAL
+            case 'online':
+                game_type = GameType.LOCAL
+            case 'archived':
+                game_type = GameType.ARCHIVED
+            case _:
+                raise NameError
 
         play_menu_music(BATTLE_THEME, MUSIC_VOLUME[0] * 2)
 

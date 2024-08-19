@@ -1,7 +1,8 @@
 import queue
 from threading import Semaphore
 
-from src.game_client import GameClient
+from src.game_client.game_client import GameClient
+from src.game_client.types.remote_client import RemoteGameClient
 from src.players.player import Player
 from src.players.player_factory import PlayerFactory, PlayerTypes
 from src.players.types.bot_player import BotPlayer
@@ -133,7 +134,7 @@ class PlayerManager:
         self.__game.active_players[player.idx] = player
 
     def __connect_local_player(self, player: Player) -> None:
-        game_client: GameClient = GameClient()
+        game_client: GameClient = RemoteGameClient()
         user_info: dict = game_client.login(name=player.player_name, password=player.password,
                                             game_name=self.__game.game_name,
                                             num_turns=self.__game.num_turns,

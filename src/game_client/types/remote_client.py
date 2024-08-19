@@ -9,10 +9,14 @@ from src.remote.server_enum import Result
 
 
 class RemoteGameClient(GameClient):
-    def __init__(self):
+    def __init__(self, is_shadow_client: bool = False):
         super().__init__()
+        self.__is_shadow_client = is_shadow_client
         self.__server_connection = ServerConnection()
         self.__server_connection.connect(HOST_NAME, HOST_PORT)
+        self.__current_turn: int = 0
+        self.__recorded_actions: dict = {}
+        self.__recorded_for_current_turn: dict = {}
 
     def __enter__(self):
         return self
@@ -21,23 +25,17 @@ class RemoteGameClient(GameClient):
         self.disconnect()
 
     def disconnect(self) -> None:
+        if self.__is_shadow_client:
+            self.__record_unrecorded_actions()
+
+            with open('test.replay', 'w') as fp:
+                json.dump(self.__recorded_actions, fp, indent='\t')
+
         self.__server_connection.disconnect()
 
     def login(self, name: str, password: str | None = None, game_name: str | None = None,
               num_turns: int | None = None, num_players: int | None = None,
               is_observer: bool | None = None, is_full: bool | None = None) -> dict:
-        """
-        User login
-        :param name: player username
-        :param password: player password
-        :param game_name: define the game player_name to create or join if it already exists
-        :param num_turns: number of game turns (if creating a game)
-        :param num_players: number of game players (if creating a game)
-        :param is_observer: define if joining as an observer
-        :param is_full: define if you want to play the full game with all combinations of player order
-        :return: user dict
-        """
-
         d: dict = {
             "name": name,
             "password": password,
@@ -54,73 +52,62 @@ class RemoteGameClient(GameClient):
         return self.__receive_response()
 
     def logout(self) -> None:
-        """
-        User logout
-        :param
-        """
         self.__send_action(Action.LOGOUT)
         self.__receive_response()
 
     def get_map(self) -> dict:
-        """
-        Map request, return all map data in a dict
-        :param
-        :return: map dict
-        """
         self.__send_action(Action.MAP)
-        return self.__receive_response()
+
+        response = self.__receive_response()
+        if self.__is_shadow_client:
+            self.__recorded_actions.setdefault(self.__current_turn, {})["map"] = response
+            self.__recorded_for_current_turn["map"] = True
+
+        return response
 
     def get_game_state(self) -> dict:
-        """
-        Game state request, returns the current game state
-        :param
-        :return: game state dict
-        """
         self.__send_action(Action.GAME_STATE)
-        return self.__receive_response()
+
+        response = self.__receive_response()
+        if self.__is_shadow_client:
+            self.__recorded_actions.setdefault(self.__current_turn, {})["game_state"] = response
+            self.__recorded_for_current_turn["game_state"] = True
+
+        return response
 
     def get_game_actions(self) -> dict:
-        """
-        Game actions request, returns the actions that happened in the previous turn.
-        Represent changes between turns.
-        :return: game actions dict
-        """
         self.__send_action(Action.GAME_ACTIONS)
-        return self.__receive_response()
+
+        response = self.__receive_response()
+        if self.__is_shadow_client:
+            self.__recorded_actions.setdefault(self.__current_turn)["game_actions"] = response
+            self.__recorded_for_current_turn["game_actions"] = True
+
+        return response
 
     def force_turn(self) -> bool:
-        """
-        Needed to force the next turn of the game instead of waiting for the game's time slice.
-        :param
-        :return: 0 if turn has happened, -1 otherwise (TIMEOUT error)
-        """
         try:
+            if self.__is_shadow_client:
+                self.__record_unrecorded_actions()
+
             self.__send_action(Action.TURN)
             self.__receive_response()
+
+            self.__current_turn += 1
         except TimeoutError:
             return False
         else:
             return True
 
     def chat(self, msg) -> None:
-        """
-        Chat, just for fun and testing
-        :param msg: message sent
-        """
         self.__send_action(Action.CHAT, {"message": msg})
         self.__receive_response()
 
     def server_move(self, move_dict: dict) -> None:
-        """
-        Changes vehicle position
-        """
         self.__send_action(Action.MOVE, move_dict)
         self.__receive_response()
 
     def server_shoot(self, shoot_dict: dict) -> None:
-        """
-        Shoot at a hex position
-        """
         self.__send_action(Action.SHOOT, shoot_dict)
         self.__receive_response()
 
@@ -176,3 +163,12 @@ class RemoteGameClient(GameClient):
             raise ConnectionError(f"Error {resp_code}: {dct['error_message']}")
 
         return dct
+
+    def __record_unrecorded_actions(self):
+        if not self.__recorded_for_current_turn.get("map"):
+            self.get_map()
+        if not self.__recorded_for_current_turn.get("game_state"):
+            self.get_game_state()
+        if not self.__recorded_for_current_turn.get("game_actions"):
+            self.get_game_actions()
+        self.__recorded_for_current_turn = {}
