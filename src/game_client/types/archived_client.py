@@ -48,8 +48,9 @@ class ArchivedGameClient(GameClient, ABC):
 
     def force_turn(self) -> bool:
         try:
-            time.sleep(
-                ARCHIVED_GAME_SPEED * MAX_ARCHIVED_GAME_DELAY + (1 - ARCHIVED_GAME_SPEED) * MIN_ARCHIVED_GAME_DELAY)
+            sleep_time = ((1 - ARCHIVED_GAME_SPEED[0]) * MAX_ARCHIVED_GAME_DELAY +
+                          (ARCHIVED_GAME_SPEED[0]) * MIN_ARCHIVED_GAME_DELAY)
+            time.sleep(sleep_time)
             self.__current_turn += 1
         except TimeoutError:
             return False

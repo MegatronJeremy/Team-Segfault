@@ -13,7 +13,7 @@ from src.gui.menus_and_screens.helper_menu import HelperMenu
 from src.gui.menus_and_screens.loading_screen import LoadingScreen
 from src.gui.menus_and_screens.menu import *
 from src.parameters import FPS_MAX, FPS_CURRENT, SCREEN_WIDTH, SCREEN_HEIGHT, BACKGROUND_IMAGE_PATH, GUI_ICON_PATH, \
-    GAME_BACKGROUND, GUI_CAPTION, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y
+    GAME_BACKGROUND, GUI_CAPTION, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y, ARCHIVED_GAME_SPEED
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'  # window at center
 
@@ -84,7 +84,7 @@ class DisplayManager:
                                           is_observer=self.__menu.observer, password=self.__menu.password)
             case GameType.ARCHIVED:
                 self.__game = archived_game("test.replay")
-                self.__slider = Slider(10, 10, 400, 20, 0, 100, 50)
+                self.__slider = Slider(10, 10, 400, 20, 0, 1, 0.5)
 
         self.__playing = True
         self.__game.start()
@@ -99,6 +99,7 @@ class DisplayManager:
                 self.__running = False
             if self.__game and self.__game.is_archived:
                 self.__slider.handle_event(event)
+                ARCHIVED_GAME_SPEED[0] = self.__slider.get_value()
         return events
 
     def run(self) -> None:
