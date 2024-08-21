@@ -7,6 +7,7 @@ from src.gui.menus_and_screens.menu_utils import play_menu_music
 from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
     MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE
+from src.settings_utils import save_settings
 
 
 class Menu:
@@ -51,6 +52,11 @@ class Menu:
         MUSIC_VOLUME[0] = value
         pygame.mixer.music.set_volume(value)
 
+    @staticmethod
+    def __quit_game():
+        save_settings()
+        pygame.event.post(pygame.event.Event(pygame.QUIT))
+
     """Menu creation"""
 
     def __create_main_menu(self) -> None:
@@ -63,7 +69,7 @@ class Menu:
         self.__main_menu.add.button('Options', self.__options_menu)
         self.__main_menu.add.button('Credits', self.__credits)
 
-        self.__main_menu.add.button('Quit', pygame_menu.events.EXIT)
+        self.__main_menu.add.button('Quit', self.__quit_game)
         Menu.set_menu_size(self.__main_menu)
         if self.__main_menu.get_width() < MENU_MIN_WIDTH:
             self.__main_menu.resize(MENU_MIN_WIDTH, self.__main_menu.get_height())

@@ -1,28 +1,40 @@
 import pygame
 
+from src.parameters import ARCHIVED_GAME_SPEED, MENU_FONT, WHITE
+
 
 class Slider:
-    def __init__(self, x, y, width, height, min_val, max_val, initial_val):
+    def __init__(self, x, y, width, height, min_val, max_val, initial_val, caption=None):
         self.rect = pygame.Rect(x, y, width, height)
         self.min_val = min_val
         self.max_val = max_val
         self.val = initial_val
         self.grabbed = False
-        self.handle_width = 10
-        self.handle_rect = pygame.Rect(x, y, self.handle_width, height)
+        self.handle_height = 10
+        self.handle_rect = pygame.Rect(x, y, width, self.handle_height)
+        self.caption = caption
+        self.font = pygame.font.Font(MENU_FONT, 24)  # Font for the caption
+
+        self.update_handle_position()
 
     def draw(self, screen):
         # Draw the slider track
         pygame.draw.rect(screen, (180, 180, 180), self.rect)
 
         # Draw the handle
-        self.handle_rect.x = self.get_handle_position()
+        self.update_handle_position()
         pygame.draw.rect(screen, (100, 100, 250), self.handle_rect)
 
-    def get_handle_position(self):
+        # Draw the caption
+        if self.caption:
+            caption_surface = self.font.render(self.caption, True, WHITE)
+            caption_rect = caption_surface.get_rect(center=(self.rect.centerx, self.rect.y - 20))
+            screen.blit(caption_surface, caption_rect)
+
+    def update_handle_position(self):
         # Calculate the position of the handle based on the current value
         proportion = (self.val - self.min_val) / (self.max_val - self.min_val)
-        return self.rect.x + proportion * (self.rect.width - self.handle_width)
+        self.handle_rect.y = self.rect.y + (1 - proportion) * (self.rect.height - self.handle_height)
 
     def handle_event(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -34,10 +46,11 @@ class Slider:
 
         elif event.type == pygame.MOUSEMOTION:
             if self.grabbed:
-                new_x = event.pos[0]
-                new_x = max(self.rect.x, min(new_x, self.rect.x + self.rect.width - self.handle_width))
-                proportion = (new_x - self.rect.x) / (self.rect.width - self.handle_width)
+                new_y = event.pos[1]
+                new_y = max(self.rect.y, min(new_y, self.rect.y + self.rect.height - self.handle_height))
+                proportion = 1 - (new_y - self.rect.y) / (self.rect.height - self.handle_height)
                 self.val = self.min_val + proportion * (self.max_val - self.min_val)
+                ARCHIVED_GAME_SPEED[0] = self.val
 
     def get_value(self):
         return self.val

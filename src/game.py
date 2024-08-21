@@ -270,17 +270,17 @@ class Game(Thread):
         self.__current_turn[0] = game_state["current_turn"]
         self.__current_player_idx[0] = game_state["current_player_idx"]
 
-        print()
+        # print()
         if self.__current_player_idx[0] != 0:
             self.__current_player = self.__active_players[self.__current_player_idx[0]]
 
             # Reset current player attacks
             self.__current_player.register_turn()
 
-            print(f"Current turn: {self.__current_turn[0]}, "
-                  f"current player: {self.__current_player.player_name}")
+            # print(f"Current turn: {self.__current_turn[0]}, "
+            #       f"current player: {self.__current_player.player_name}")
         else:
-            print(f"Current turn: {self.__current_turn[0]}")
+            # print(f"Current turn: {self.__current_turn[0]}")
             self.__current_player = None
 
         if self.game_map:

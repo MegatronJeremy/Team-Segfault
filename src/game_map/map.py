@@ -96,13 +96,13 @@ class Map:
 
             tank = self.__tanks[int(vehicle_id)]
 
-            # Used to test discrepancies between server and local data
-            if server_coord != tank.coord:
-                print('server_coord', server_coord, 'tank.coord', tank.coord)
-            if server_hp != tank.health_points:
-                print('server_hp', server_hp, 'tank.health_points', tank.health_points, 'tank.player_id'
-                      , tank.type, tank.player_id)
             # Ignore this for now
+            # Used to test discrepancies between server and local data
+            # if server_coord != tank.coord:
+            #     print('server_coord', server_coord, 'tank.coord', tank.coord)
+            # if server_hp != tank.health_points:
+            #     print('server_hp', server_hp, 'tank.health_points', tank.health_points, 'tank.player_id'
+            #           , tank.type, tank.player_id)
             # if server_cp != tank.capture_points:
             #     print(tank.type, tank.player_id, 'server_cp', server_cp, 'tank.cp', tank.capture_points)
 

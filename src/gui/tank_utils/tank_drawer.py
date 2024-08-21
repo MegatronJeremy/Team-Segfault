@@ -3,6 +3,32 @@ import pygame
 from src.game_map.hex import Hex
 from src.parameters import HEX_RADIUS_Y, HEX_RADIUS_X
 
+# Define the text outline thickness
+outline_thickness = 2
+
+
+# Function to render text with outline
+def render_text_with_outline(font, text, color, outline_color):
+    # Render the outline text by drawing the text multiple times offset by the outline thickness
+    outline_surface = pygame.Surface(
+        (font.size(text)[0] + outline_thickness * 2, font.size(text)[1] + outline_thickness * 2), pygame.SRCALPHA)
+    outline_font = font
+    for dx in range(-outline_thickness, outline_thickness + 1):
+        for dy in range(-outline_thickness, outline_thickness + 1):
+            if dx ** 2 + dy ** 2 <= outline_thickness ** 2:
+                outline_surface.blit(outline_font.render(text, True, outline_color),
+                                     (outline_thickness + dx, outline_thickness + dy))
+
+    # Render the main text on top of the outline
+    text_surface = font.render(text, True, color)
+
+    # Create a new surface and blit the outline and text on it
+    surface = pygame.Surface((outline_surface.get_width(), outline_surface.get_height()), pygame.SRCALPHA)
+    surface.blit(outline_surface, (0, 0))
+    surface.blit(text_surface, (outline_thickness, outline_thickness))
+
+    return surface
+
 
 class TankDrawer(pygame.sprite.Sprite):
     # timers representing how long will tank on previous position be visible
@@ -44,7 +70,7 @@ class TankDrawer(pygame.sprite.Sprite):
             return
         font_size = round(min(HEX_RADIUS_Y[0], HEX_RADIUS_X[0]))
         font = pygame.font.SysFont('arial', font_size, bold=True)
-        text = font.render(str(self.__tank.health_points), True, 'black')
+        text = render_text_with_outline(font, str(self.__tank.health_points), 'white', 'black')
         text_rect = text.get_rect(bottomleft=(Hex.make_center(self.__tank.coord)[0] + HEX_RADIUS_X[0] / 2,
                                               Hex.make_center(self.__tank.coord)[1] + HEX_RADIUS_Y[0] / 2))
         screen.blit(text, text_rect)
