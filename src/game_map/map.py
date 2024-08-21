@@ -102,8 +102,9 @@ class Map:
             if server_hp != tank.health_points:
                 print('server_hp', server_hp, 'tank.health_points', tank.health_points, 'tank.player_id'
                       , tank.type, tank.player_id)
-            if server_cp != tank.capture_points:
-                print(tank.type, tank.player_id, 'server_cp', server_cp, 'tank.cp', tank.capture_points)
+            # Ignore this for now
+            # if server_cp != tank.capture_points:
+            #     print(tank.type, tank.player_id, 'server_cp', server_cp, 'tank.cp', tank.capture_points)
 
             self.local_move(tank, server_coord) if server_coord != tank.coord else None
 
@@ -146,10 +147,11 @@ class Map:
         return len(player_ids_in_base) <= self.__max_players_in_base
 
     def __update_capture_points(self):
-        for coord in self.__base_coords:
-            tank = self.__map[coord]['tank']
-            if tank and not tank.is_destroyed:
-                tank.capture_points += 1
+        pass
+        # for coord in self.__base_coords:
+        # tank = self.__map[coord]['tank']
+        # if tank and not tank.is_destroyed:
+        #     tank.capture_points += 1
 
     def __respawn_destroyed_tanks(self) -> None:
         while self.__destroyed:

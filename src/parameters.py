@@ -20,10 +20,12 @@ SCREEN_HEIGHT = SCREEN_RATIO[1] * SCREEN_SIZE
 HEX_RADIUS_X = [-1]
 HEX_RADIUS_Y = [-1]
 
-# archived game constants
+# archived game parameters
 ARCHIVED_GAME_SPEED = [0]
 MIN_ARCHIVED_GAME_DELAY = 0.3
 MAX_ARCHIVED_GAME_DELAY = 3.0
+ARCHIVED_GAME_TURN = [0]
+ARCHIVED_GAME_PAUSED = [False]
 
 # mab constants
 DEFAULT_ACTION_FILE = 'v6'
@@ -52,6 +54,8 @@ LOADING_ANIMATION_LIMIT = 50
 # colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GRAY = (100, 100, 100)
+BLUE = (0, 0, 255)
 GAME_BACKGROUND = (47, 31, 128)
 PLAYER_COLORS = ((224, 206, 70), (70, 191, 224), (201, 26, 40))  # yellow, blue, red; third could be (227, 61, 116)
 BASE_COLOR = (39, 161, 72)

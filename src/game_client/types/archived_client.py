@@ -3,7 +3,8 @@ import time
 from abc import ABC
 
 from src.game_client.game_client import GameClient
-from src.parameters import ARCHIVED_GAME_SPEED, MAX_ARCHIVED_GAME_DELAY, MIN_ARCHIVED_GAME_DELAY
+from src.parameters import ARCHIVED_GAME_SPEED, MAX_ARCHIVED_GAME_DELAY, MIN_ARCHIVED_GAME_DELAY, ARCHIVED_GAME_TURN, \
+    ARCHIVED_GAME_PAUSED
 
 
 class ArchivedGameClient(GameClient, ABC):
@@ -12,8 +13,6 @@ class ArchivedGameClient(GameClient, ABC):
 
         with open(file_path, 'r') as f:
             self.__archive_file = json.load(f)
-
-        self.__current_turn: int = 0
 
     def __enter__(self):
         return self
@@ -38,24 +37,43 @@ class ArchivedGameClient(GameClient, ABC):
         pass
 
     def get_map(self) -> dict:
-        return self.__archive_file[str(self.__current_turn)]["map"]
+        return self.__archive_file[str(self.__current_turn[0])]["map"]
 
     def get_game_state(self) -> dict:
-        return self.__archive_file[str(self.__current_turn)]["game_state"]
+        return self.__archive_file[str(self.__current_turn[0])]["game_state"]
 
     def get_game_actions(self) -> dict:
-        return self.__archive_file[str(self.__current_turn)]["game_actions"]
+        return self.__archive_file[str(self.__current_turn[0])]["game_actions"]
 
     def force_turn(self) -> bool:
-        try:
-            sleep_time = ((1 - ARCHIVED_GAME_SPEED[0]) * MAX_ARCHIVED_GAME_DELAY +
-                          (ARCHIVED_GAME_SPEED[0]) * MIN_ARCHIVED_GAME_DELAY)
-            time.sleep(sleep_time)
-            self.__current_turn += 1
-        except TimeoutError:
+        if ARCHIVED_GAME_PAUSED[0]:
             return False
-        else:
-            return True
+
+        # Split sleep_time into smaller intervals
+        interval: float = 0.01  # Check every 10 milliseconds
+        elapsed: float = 0
+
+        while elapsed < self.__get_sleep_time():
+            if ARCHIVED_GAME_PAUSED[0]:
+                return False
+
+            time.sleep(interval)
+            elapsed += interval
+
+        self.__current_turn[0] += 1
+
+        return True
+
+    @property
+    def __current_turn(self) -> list[int]:
+        max_turn: int = self.__archive_file["0"]["game_state"]["num_turns"]
+
+        if ARCHIVED_GAME_TURN[0] < 0:
+            ARCHIVED_GAME_TURN[0] = 0
+        if ARCHIVED_GAME_TURN[0] > max_turn:
+            ARCHIVED_GAME_TURN[0] = max_turn
+
+        return ARCHIVED_GAME_TURN
 
     def chat(self, msg) -> None:
         pass
@@ -65,3 +83,8 @@ class ArchivedGameClient(GameClient, ABC):
 
     def server_shoot(self, shoot_dict: dict) -> None:
         raise NotImplementedError
+
+    @staticmethod
+    def __get_sleep_time() -> float:
+        return ((1 - ARCHIVED_GAME_SPEED[0]) * MAX_ARCHIVED_GAME_DELAY +
+                (ARCHIVED_GAME_SPEED[0]) * MIN_ARCHIVED_GAME_DELAY)

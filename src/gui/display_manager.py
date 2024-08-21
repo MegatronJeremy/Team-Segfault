@@ -6,6 +6,7 @@ from pygame import font
 from src.game_presets.archived_game import archived_game
 from src.game_presets.local_game import local_game
 from src.game_presets.online_game import online_game
+from src.gui.control_utils.button import Button
 from src.gui.control_utils.slider import Slider
 from src.gui.menus_and_screens.end_screen import EndScreen
 from src.gui.menus_and_screens.error_screen import ErrorScreen
@@ -13,7 +14,8 @@ from src.gui.menus_and_screens.helper_menu import HelperMenu
 from src.gui.menus_and_screens.loading_screen import LoadingScreen
 from src.gui.menus_and_screens.menu import *
 from src.parameters import FPS_MAX, FPS_CURRENT, SCREEN_WIDTH, SCREEN_HEIGHT, BACKGROUND_IMAGE_PATH, GUI_ICON_PATH, \
-    GAME_BACKGROUND, GUI_CAPTION, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y, ARCHIVED_GAME_SPEED
+    GAME_BACKGROUND, GUI_CAPTION, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y, ARCHIVED_GAME_SPEED, GRAY, BLACK, \
+    BLUE, ARCHIVED_GAME_TURN, ARCHIVED_GAME_PAUSED
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'  # window at center
 
@@ -66,6 +68,24 @@ class DisplayManager:
             self.__music_paused = False
             pygame.mixer.music.unpause()
 
+    @staticmethod
+    def __advance_turn():
+        if ARCHIVED_GAME_PAUSED[0]:
+            ARCHIVED_GAME_TURN[0] += 1
+
+    @staticmethod
+    def __rewind_turn():
+        if ARCHIVED_GAME_PAUSED[0]:
+            ARCHIVED_GAME_TURN[0] -= 1
+
+    @staticmethod
+    def __pause_game():
+        ARCHIVED_GAME_PAUSED[0] = True
+
+    @staticmethod
+    def __unpause_game():
+        ARCHIVED_GAME_PAUSED[0] = False
+
     def __start_the_game(self, game_type: GameType, is_full: bool, use_advanced_ai: bool,
                          num_players: int = 1,
                          num_turns: int | None = None) -> None:
@@ -85,6 +105,14 @@ class DisplayManager:
             case GameType.ARCHIVED:
                 self.__game = archived_game("test.replay")
                 self.__slider = Slider(10, 10, 400, 20, 0, 1, 0.5)
+                self.__button_next = Button("Next", 420, 10, 40, 20, GRAY, BLUE, BLACK,
+                                            self.__advance_turn)
+                self.__button_prev = Button("Prev", 470, 10, 40, 20, GRAY, BLUE, BLACK,
+                                            self.__rewind_turn)
+                self.__button_play = Button("Play", 520, 10, 40, 20, GRAY, BLUE, BLACK,
+                                            self.__unpause_game)
+                self.__button_pause = Button("Pause", 570, 10, 40, 20, GRAY, BLUE, BLACK,
+                                             self.__pause_game)
 
         self.__playing = True
         self.__game.start()
@@ -98,7 +126,7 @@ class DisplayManager:
                     self.__game.over.set()
                 self.__running = False
             if self.__game and self.__game.is_archived:
-                self.__slider.handle_event(event)
+                self.__handle_archived_game_ui_events(event)
                 ARCHIVED_GAME_SPEED[0] = self.__slider.get_value()
         return events
 
@@ -116,8 +144,11 @@ class DisplayManager:
         while self.__running:
 
             self.__draw_background()
+
+            # draw archived game ui
             if self.__game and self.__game.is_archived:
-                self.__slider.draw(self.__screen)
+                self.__draw_archived_game_ui()
+
             events = self.__check_events()
 
             # draw enabled menu
@@ -191,7 +222,22 @@ class DisplayManager:
         self.__screen.blit(error_msg, ((SCREEN_WIDTH - error_msg.get_width()) / 2,
                                        HEX_RADIUS_Y[0] + error_number.get_height()))
 
+    def __draw_archived_game_ui(self) -> None:
+        self.__slider.draw(self.__screen)
+        self.__button_next.draw(self.__screen)
+        self.__button_prev.draw(self.__screen)
+        self.__button_pause.draw(self.__screen)
+        self.__button_play.draw(self.__screen)
+
     def __finalize_game(self) -> None:
         self.__game.over.set()
         self.__game = None
         self.__playing = False
+        ARCHIVED_GAME_TURN[0] = 0
+
+    def __handle_archived_game_ui_events(self, event):
+        self.__slider.handle_event(event)
+        self.__button_next.handle_event(event)
+        self.__button_prev.handle_event(event)
+        self.__button_pause.handle_event(event)
+        self.__button_play.handle_event(event)
