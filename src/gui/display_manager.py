@@ -116,7 +116,8 @@ class DisplayManager:
                 # set the game end
                 if self.__game:
                     self.__game.over.set()
-                self.__running = False
+                if event.type == pygame.QUIT:
+                    self.__running = False
             if self.__game and self.__game.is_archived:
                 self.__archived_game_ui_controller.handle_mouse_click(event)
         return events
