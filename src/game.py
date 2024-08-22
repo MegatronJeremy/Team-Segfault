@@ -12,7 +12,7 @@ from src.players.player_manager import PlayerManager
 class Game(Thread):
     def __init__(self, game_name: str | None = None, num_turns: int | None = None,
                  max_players: int = 1, is_full: bool = False, use_ml_actions: bool = True,
-                 is_archived_game: bool = False) -> None:
+                 is_archived_game: bool = False, replay_file: str | None = None) -> None:
         super().__init__()
 
         self.game_map: Map | None = None
@@ -45,7 +45,7 @@ class Game(Thread):
         self.__is_archived_game = is_archived_game
 
         # Observer connection that is used for collecting data
-        self.__shadow_client = ArchivedGameClient("test.replay") if is_archived_game \
+        self.__shadow_client = ArchivedGameClient(replay_file) if is_archived_game \
             else RemoteGameClient(is_shadow_client=True)
 
         self.__active_players: dict[int, Player] = {}

@@ -1,8 +1,10 @@
+import datetime
 import json
+import os.path
 import struct
 
 from src.game_client.game_client import GameClient
-from src.parameters import HOST_PORT, HOST_NAME, BYTES_IN_INT
+from src.parameters import HOST_PORT, HOST_NAME, BYTES_IN_INT, REPLAYS_LOCATION
 from src.remote.server_connection import ServerConnection
 from src.remote.server_enum import Action
 from src.remote.server_enum import Result
@@ -28,8 +30,23 @@ class RemoteGameClient(GameClient):
         if self.__is_shadow_client:
             self.__record_unrecorded_actions()
 
-            with open('test.replay', 'w') as fp:
+            # Extract parameters from JSON
+            num_players = self.__recorded_actions[0]['game_state']['num_players']
+            num_turns = self.__recorded_actions[0]['game_state']['num_turns']
+            num_rounds = self.__recorded_actions[0]['game_state']['num_rounds']
+
+            # Generate a timestamp
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+
+            # Create a filename with the timestamp first
+            filename = f"{timestamp}_game_{num_players}p_{num_turns}t_{num_rounds}r.replay"
+            save_path = os.path.join(REPLAYS_LOCATION, filename)
+
+            # Save JSON to the generated filename
+            with open(save_path, 'w') as fp:
                 json.dump(self.__recorded_actions, fp, indent='\t')
+
+            print(f"Replay saved as {filename}")
 
         self.__server_connection.disconnect()
 

@@ -1,17 +1,18 @@
 import json
+import os
 import time
 from abc import ABC
 
 from src.game_client.game_client import GameClient
 from src.parameters import ARCHIVED_GAME_SPEED, MAX_ARCHIVED_GAME_DELAY, MIN_ARCHIVED_GAME_DELAY, ARCHIVED_GAME_TURN, \
-    ARCHIVED_GAME_PAUSED
+    ARCHIVED_GAME_PAUSED, REPLAYS_LOCATION
 
 
 class ArchivedGameClient(GameClient, ABC):
     def __init__(self, file_path: str):
         super().__init__()
 
-        with open(file_path, 'r') as f:
+        with open(os.path.join(REPLAYS_LOCATION, file_path), 'r') as f:
             self.__archive_file = json.load(f)
 
     def __enter__(self):

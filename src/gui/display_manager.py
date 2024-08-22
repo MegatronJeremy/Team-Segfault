@@ -1,5 +1,3 @@
-import os
-
 import pygame.draw
 from pygame import font
 
@@ -87,7 +85,8 @@ class DisplayManager:
 
     def __start_the_game(self, game_type: GameType, is_full: bool, use_advanced_ai: bool,
                          num_players: int = 1,
-                         num_turns: int | None = None) -> None:
+                         num_turns: int | None = None,
+                         replay_file: str | None = None) -> None:
         del self.__game
         self.__menu.disable()
 
@@ -104,7 +103,7 @@ class DisplayManager:
             case GameType.ARCHIVED:
                 self.__archived_game_ui_controller = ArchivedGameUIController()
 
-                self.__game = archived_game("test.replay")
+                self.__game = archived_game(replay_file)
 
         self.__playing = True
         self.__game.start()

@@ -1,3 +1,5 @@
+import os
+
 import pygame
 import pygame_menu
 
@@ -6,7 +8,7 @@ from src.gui.map_utils.map_type_enum import MapType
 from src.gui.menus_and_screens.menu_utils import play_menu_music
 from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
-    MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE
+    MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION
 from src.settings_utils import save_settings
 
 
@@ -63,6 +65,7 @@ class Menu:
         self.__main_menu: pygame_menu.Menu = pygame_menu.Menu('Main menu', self.__menu_width, self.__menu_height,
                                                               theme=self.__menu_theme, position=MENU_POSITION,
                                                               mouse_motion_selection=True)
+
         self.__main_menu.add.button('Play local game', self.__local_game_menu)
         self.__main_menu.add.button('Play multiplayer game', self.__multiplayer_menu)
         self.__main_menu.add.button('Play archived game', self.__archived_game_menu)
@@ -138,17 +141,36 @@ class Menu:
 
         Menu.set_menu_size(self.__multiplayer_menu)
 
+    def __create_page_menu(self, page: int, total_pages: int, files_per_page: int, replay_files) -> pygame_menu.Menu:
+        menu = pygame_menu.Menu(f'Archived game (Page {page + 1}/{total_pages})', self.__menu_width,
+                                self.__menu_height, theme=self.__menu_theme,
+                                onclose=pygame_menu.events.BACK,
+                                mouse_motion_selection=True, menu_id=f'archived')
+
+        start_index = page * files_per_page
+        end_index = min(start_index + files_per_page, len(replay_files))
+        for replay_file in replay_files[start_index:end_index]:
+            menu.add.button(replay_file, self.__battle, replay_file)
+
+        if page > 0:
+            menu.add.button('Previous Page', lambda: self.__archived_game_menu._open(
+                self.__create_page_menu(page - 1, total_pages, files_per_page, replay_files)))
+        if page < total_pages - 1:
+            menu.add.button('Next Page', lambda: self.__archived_game_menu._open(
+                self.__create_page_menu(page + 1, total_pages, files_per_page, replay_files)))
+
+        # Add the back button to return to the main menu
+        menu.add.button('Back', pygame_menu.events.BACK)
+
+        Menu.set_menu_size(menu)
+        return menu
+
     def __create_archived_game_menu(self) -> None:
-        self.__archived_game_menu: pygame_menu.Menu = pygame_menu.Menu('Archived game', self.__menu_width,
-                                                                       self.__menu_height,
-                                                                       theme=self.__menu_theme,
-                                                                       onclose=pygame_menu.events.BACK,
-                                                                       mouse_motion_selection=True, menu_id='archived')
+        files_per_page = 10  # Adjust this number based on your screen size
+        replay_files = [f for f in os.listdir(REPLAYS_LOCATION) if f.endswith('.replay')]
+        total_pages = (len(replay_files) - 1) // files_per_page + 1
 
-        self.__archived_game_menu.add.button('Battle!', self.__battle)
-        self.__archived_game_menu.add.button('Back', pygame_menu.events.BACK)
-
-        Menu.set_menu_size(self.__archived_game_menu)
+        self.__archived_game_menu = self.__create_page_menu(0, total_pages, files_per_page, replay_files)
 
     def __create_credits_menu(self) -> None:
         self.__credits: pygame_menu.Menu = pygame_menu.Menu('Credits', self.__menu_width, self.__menu_height,
@@ -169,7 +191,7 @@ class Menu:
         self.__menu_theme.widget_alignment = pygame_menu.locals.ALIGN_LEFT
         self.__menu_theme.widget_font = MENU_FONT
 
-    def __battle(self) -> None:
+    def __battle(self, replay_file: str = None) -> None:
         game_type: GameType
 
         menu_id = pygame_menu.Menu.get_current(self.__main_menu).get_id()
@@ -190,7 +212,8 @@ class Menu:
                                    is_full=self.__local_game_menu.get_widget('full_game').get_value(),
                                    use_advanced_ai=self.__local_game_menu.get_widget('advanced_ai').get_value(),
                                    num_players=self.__local_game_menu.get_widget('num_players').get_value(),
-                                   num_turns=int(self.__local_game_menu.get_widget('num_turns').get_value()))
+                                   num_turns=int(self.__local_game_menu.get_widget('num_turns').get_value()),
+                                   replay_file=replay_file)
 
     def disable(self) -> None:
         self.__main_menu.disable()

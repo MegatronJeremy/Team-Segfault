@@ -2,6 +2,6 @@ from src.game import Game
 
 
 def archived_game(file_name: str) -> Game:
-    game = Game(game_name=file_name, is_archived_game=True)
+    game = Game(is_archived_game=True, replay_file=file_name)
 
     return game

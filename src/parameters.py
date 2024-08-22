@@ -96,6 +96,9 @@ SCRIPT_DIR = os.path.dirname(__file__)
 # define the base directory for the assets
 ASSETS_LOCATION = os.path.join(SCRIPT_DIR, '../assets')
 
+# define the base directory for the replays
+REPLAYS_LOCATION = os.path.join(SCRIPT_DIR, '../replays')
+
 # sound paths
 EXPLOSION_SOUND = os.path.join(ASSETS_LOCATION, 'sounds', 'explosion.mp3')
 BULLET_SOUND = os.path.join(ASSETS_LOCATION, 'sounds', 'shot.mp3')
