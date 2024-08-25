@@ -111,10 +111,12 @@ class DisplayManager:
     def __check_events(self) -> list[pygame.event.Event]:
         events = pygame.event.get()
         for event in events:
-            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 # set the game end
                 if self.__game:
                     self.__game.over.set()
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                    events.remove(event)  # Consume ESCAPE event to avoid menus bugging out
                 if event.type == pygame.QUIT:
                     self.__running = False
             if self.__game and self.__game.is_archived:
