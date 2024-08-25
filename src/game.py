@@ -4,7 +4,7 @@ from src.game_client.game_client import GameClient
 from src.game_client.types.archived_client import ArchivedGameClient
 from src.game_client.types.remote_client import RemoteGameClient
 from src.game_map.map import Map
-from src.parameters import DEFAULT_ACTION_FILE
+from src.parameters import DEFAULT_ACTION_FILE, ARCHIVED_GAME_TURN
 from src.players.player import Player
 from src.players.player_manager import PlayerManager
 
@@ -152,7 +152,7 @@ class Game(Thread):
             self.__init_game_state()
 
             while not self.over.is_set():
-                if self.__next_round:
+                if self.__next_round and not (self.__is_archived_game and ARCHIVED_GAME_TURN[0] <= self.__num_turns):
                     # start next round if need be
                     self.__start_next_round()
                 elif self.__next_turn:
@@ -289,7 +289,8 @@ class Game(Thread):
         if game_state["finished"]:
             self.__round_winner_index = game_state["winner"]
 
-            self.__print_round_winner()
+            # TODO add logging enable/disable macro
+            # self.__print_round_winner()
 
             # set the new player win counts
             self.__set_player_win_counts(game_state)

@@ -15,6 +15,9 @@ class ArchivedGameClient(GameClient, ABC):
         with open(os.path.join(REPLAYS_LOCATION, file_path), 'r') as f:
             self.__archive_file = json.load(f)
 
+            self.__max_turn: int = (self.__archive_file["0"]["game_state"]["num_turns"] + 1) \
+                                   * self.__archive_file["0"]["game_state"]["num_rounds"] - 1
+
     def __enter__(self):
         return self
 
@@ -67,12 +70,10 @@ class ArchivedGameClient(GameClient, ABC):
 
     @property
     def __current_turn(self) -> list[int]:
-        max_turn: int = self.__archive_file["0"]["game_state"]["num_turns"]
-
         if ARCHIVED_GAME_TURN[0] < 0:
             ARCHIVED_GAME_TURN[0] = 0
-        if ARCHIVED_GAME_TURN[0] > max_turn:
-            ARCHIVED_GAME_TURN[0] = max_turn
+        if ARCHIVED_GAME_TURN[0] > self.__max_turn:
+            ARCHIVED_GAME_TURN[0] = self.__max_turn
 
         return ARCHIVED_GAME_TURN
 

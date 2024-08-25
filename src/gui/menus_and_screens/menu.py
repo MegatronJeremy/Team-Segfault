@@ -21,6 +21,11 @@ class Menu:
 
         self.__create_menu_theme()
 
+        self.__create_menu()
+
+        self.__is_enabled = self.__main_menu.is_enabled()
+
+    def __create_menu(self) -> None:
         # submenus need to be created before main menu
         self.__create_options_menu()
         self.__create_multiplayer_menu()
@@ -28,8 +33,6 @@ class Menu:
         self.__create_archived_game_menu()
         self.__create_credits_menu()
         self.__create_main_menu()
-
-        self.__is_enabled = self.__main_menu.is_enabled()
 
     """Menu callbacks"""
 
@@ -220,6 +223,9 @@ class Menu:
 
     def enable(self) -> None:
         play_menu_music(MENU_THEME, MUSIC_VOLUME[0])
+
+        # Recreate the menu to show new archived game replay
+        self.__create_menu()
         self.__main_menu.enable()
 
     def draw(self, screen) -> None:
