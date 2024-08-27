@@ -2,7 +2,7 @@ import pygame
 from pygame import Surface
 
 from src.parameters import BULLET_IMAGE_PATH, BULLET_SOUND, BULLET_VECTOR, SOUND_VOLUME, HEX_RADIUS_X, HEX_RADIUS_Y, \
-    BULLET_TRAVEL_TIME
+    BULLET_TRAVEL_TIME, ANIMATION_SPEED_MULTIPLIER
 
 
 class Projectile(pygame.sprite.Sprite):
@@ -30,7 +30,6 @@ class Projectile(pygame.sprite.Sprite):
 
         # animation variables
         self.counter: float = 0
-        self.step: float = 1 / BULLET_TRAVEL_TIME
 
         # sound
         self.__sound = pygame.mixer.Sound(BULLET_SOUND)
@@ -41,7 +40,7 @@ class Projectile(pygame.sprite.Sprite):
         if self.__sound_played is False:
             self.__sound.play()
             self.__sound_played = True
-        self.counter += self.step
+        self.counter += 1.0 / (BULLET_TRAVEL_TIME * ANIMATION_SPEED_MULTIPLIER[0])
 
         if self.counter >= 1:
             self.kill()

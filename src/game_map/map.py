@@ -13,7 +13,8 @@ from src.entities.tanks.tank_factory import TankFactory
 from src.game_map import _a_star
 from src.game_map.hex import Hex
 from src.gui.map_utils.map_drawer import MapDrawer
-from src.parameters import HEX_RADIUS_X, HEX_RADIUS_Y, SCREEN_HEIGHT, SCREEN_WIDTH
+from src.parameters import HEX_RADIUS_X, HEX_RADIUS_Y, SCREEN_HEIGHT, SCREEN_WIDTH, SHOT_TANK_OUTLINE_COLOR, \
+    SHOOTING_TANK_OUTLINE_COLOR
 
 
 class Map:
@@ -178,7 +179,10 @@ class Map:
 
     def local_shoot(self, tank: Tank, target: Tank) -> None:
         destroyed = target.register_hit_return_destroyed()
-        self.__map_drawer.add_shot(Hex.make_center(tank.coord), Hex.make_center(target.coord), tank.color)
+
+        source_center = Hex.make_center(tank.coord)
+        self.__map_drawer.add_shot(source_center, Hex.make_center(target.coord), tank.color)
+        self.__map_drawer.add_hitreg(source_center, tank.image_path, SHOOTING_TANK_OUTLINE_COLOR)
 
         if destroyed:
             # update player damage points
@@ -190,7 +194,8 @@ class Map:
             # add to destroyed tanks
             self.__destroyed.append(target)
         else:
-            self.__map_drawer.add_hitreg(self.__map[target.coord]['feature'].center, target.image_path)
+            self.__map_drawer.add_hitreg(self.__map[target.coord]['feature'].center, target.image_path,
+                                         SHOT_TANK_OUTLINE_COLOR)
         self.__players[tank.player_id].register_shot(target.player_id)
 
         tank.catapult_bonus = False  # If had catapult bonus remove

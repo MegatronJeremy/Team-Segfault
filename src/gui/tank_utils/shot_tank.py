@@ -7,21 +7,22 @@ from src.parameters import HEX_RADIUS_Y, HEX_RADIUS_X, TANK_PULSE_FULL_DURATION,
 class ShotTank(pygame.sprite.Sprite):
     """Class representing a shadow of a tank that has been shot, but not destroyed"""
 
-    def __init__(self, coord: tuple[int, int], image_path: str, color: str | tuple[int, int, int] = None):
+    def __init__(self, coord: tuple[int, int], image_path: str,
+                 color: str | tuple[int, int, int] = SHOT_TANK_OUTLINE_COLOR):
         super().__init__()
 
         # image index
         self.index = 0
         # animation counter
         self.counter = 0
-        self.color = SHOT_TANK_OUTLINE_COLOR
+        self.color = color
         self.coord = coord
         self.base_image = pygame.image.load(image_path)
         self.scale = (HEX_RADIUS_X[0] * TANK_IMAGE_SCALE, HEX_RADIUS_Y[0] * TANK_IMAGE_SCALE)
         # color tank image
         self.image = pygame.transform.scale(pygame.image.load(image_path), self.scale)
         color_image = pygame.Surface(self.image.get_size())
-        color_image.fill(SHOT_TANK_OUTLINE_COLOR)
+        color_image.fill(color)
         self.image.blit(color_image, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
 
         difference = TANK_SHADOW_MAX_SCALE - TANK_IMAGE_SCALE

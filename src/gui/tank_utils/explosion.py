@@ -1,7 +1,7 @@
 import pygame
 
 from src.parameters import SOUND_VOLUME, EXPLOSION_IMAGES, EXPLOSION_SOUND, HEX_RADIUS_X, HEX_RADIUS_Y, \
-    EXPLOSION_IMAGE_SCALE, EXPLOSION_SPEED
+    EXPLOSION_IMAGE_SCALE, EXPLOSION_SPEED, ANIMATION_SPEED_MULTIPLIER
 
 
 class Explosion(pygame.sprite.Sprite):
@@ -36,12 +36,13 @@ class Explosion(pygame.sprite.Sprite):
 
         self.counter += 1
 
-        if self.counter >= EXPLOSION_SPEED and self.index < len(Explosion.__IMAGES) - 1:
+        if self.counter >= EXPLOSION_SPEED * ANIMATION_SPEED_MULTIPLIER[0] and self.index < len(Explosion.__IMAGES) - 1:
             self.counter = 0
             self.index += 1
             self.image = Explosion.__IMAGES[self.index]
 
-        if self.index >= len(Explosion.__IMAGES) - 1 and self.counter >= EXPLOSION_SPEED:
+        if self.index >= len(Explosion.__IMAGES) - 1 and self.counter >= EXPLOSION_SPEED * ANIMATION_SPEED_MULTIPLIER[
+            0]:
             self.kill()
 
     @staticmethod

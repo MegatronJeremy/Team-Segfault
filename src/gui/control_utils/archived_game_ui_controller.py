@@ -1,6 +1,7 @@
 from src.gui.control_utils.button import Button
 from src.gui.control_utils.slider import Slider
-from src.parameters import SCREEN_HEIGHT, WHITE, GRAY, BLUE, ARCHIVED_GAME_PAUSED, ARCHIVED_GAME_TURN, SCREEN_WIDTH
+from src.parameters import SCREEN_HEIGHT, WHITE, GRAY, BLUE, ARCHIVED_GAME_PAUSED, ARCHIVED_GAME_TURN, SCREEN_WIDTH, \
+    ANIMATION_SPEED_MULTIPLIER, ARCHIVED_GAME_SPEED
 
 
 class ArchivedGameUIController:
@@ -34,12 +35,26 @@ class ArchivedGameUIController:
         self.__button_pause = Button("Pause", x_position, y_position_pause, button_width, button_height, GRAY, BLUE,
                                      WHITE, self.__pause_game)
 
-        # Position the slider to the right of the buttons
+        # Position the sliders above and below each other
         slider_width = 20
-        slider_height = total_button_height  # Match the height of the buttons stack
-        slider_x_position = SCREEN_WIDTH - (x_position + slider_padding + padding)
-        slider_y_position = y_start_position
-        self.__slider = Slider(slider_x_position, slider_y_position, slider_width, slider_height, 0, 1, 0.5, "Speed")
+        slider_height = total_button_height // 1.5  # Adjust the height so both sliders fit nicely
+        slider_gap = 100
+
+        # Calculate the starting y position for the sliders to center them vertically
+        total_slider_height = 2 * slider_height + slider_gap
+        slider_y_start_position = (SCREEN_HEIGHT - total_slider_height) // 2
+
+        # Position the first slider (Game Speed) at the calculated starting y position
+        slider_x_position = SCREEN_WIDTH - slider_padding - slider_width - padding
+        slider_y_position = slider_y_start_position
+        self.__game_speed_slider = Slider(slider_x_position, slider_y_position, slider_width, slider_height,
+                                          0, 1, 0.5, "Game    speed", ARCHIVED_GAME_SPEED)
+
+        # Position the second slider (Animation Speed) directly below the first slider
+        slider_y_position += slider_height + slider_gap  # Move y position down by the height of the first slider plus the gap
+        self.__animation_speed_slider = Slider(slider_x_position, slider_y_position, slider_width, slider_height,
+                                               1, 6, 3.5, "Animation speed",
+                                               ANIMATION_SPEED_MULTIPLIER, 'below', True)
 
         self.update_states()
 
@@ -81,11 +96,13 @@ class ArchivedGameUIController:
         self.__button_pause.check_click(mouse_pos)
         self.__button_prev.check_click(mouse_pos)
         self.__button_next.check_click(mouse_pos)
-        self.__slider.handle_event(mouse_pos)
+        self.__game_speed_slider.handle_event(mouse_pos)
+        self.__animation_speed_slider.handle_event(mouse_pos)
 
     def draw(self, screen):
         self.__button_play.draw(screen)
         self.__button_pause.draw(screen)
         self.__button_prev.draw(screen)
         self.__button_next.draw(screen)
-        self.__slider.draw(screen)
+        self.__game_speed_slider.draw(screen)
+        self.__animation_speed_slider.draw(screen)
