@@ -1,4 +1,5 @@
 from src.game import Game
+from src.game_presets.game_preset_utils import setup_num_turns
 from src.parameters import DEFAULT_NUM_TURNS
 
 
@@ -8,8 +9,8 @@ def online_game(game_name: str, player_name: str, num_players: int = 1, use_adva
     # Maybe have an option of either creating a game or joining an already made one? (with None parameters
     # it will be overridden by the server values,
     # and if the optional parameters don't match when creating a game that already exists a connection will be returned)
-    if num_turns < 1:
-        num_turns = DEFAULT_NUM_TURNS
+    num_turns = setup_num_turns(num_turns, num_players)
+  
     game = Game(game_name=game_name, max_players=num_players, num_turns=num_turns,
                 is_full=is_full)
 

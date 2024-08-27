@@ -4,7 +4,7 @@ from src.game_client.game_client import GameClient
 from src.game_client.types.archived_client import ArchivedGameClient
 from src.game_client.types.remote_client import RemoteGameClient
 from src.game_map.map import Map
-from src.parameters import DEFAULT_ACTION_FILE, ARCHIVED_GAME_TURN
+from src.parameters import DEFAULT_ACTION_FILE, ARCHIVED_GAME_TURN, CURRENT_GAME_NAME
 from src.players.player import Player
 from src.players.player_manager import PlayerManager
 
@@ -17,6 +17,7 @@ class Game(Thread):
 
         self.game_map: Map | None = None
         self.__game_name: str | None = game_name
+        CURRENT_GAME_NAME[0] = game_name
 
         # create an active event
         self.over: Event = Event()

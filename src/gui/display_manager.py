@@ -96,8 +96,8 @@ class DisplayManager:
                                          num_turns=num_turns, is_full=is_full)
             case GameType.ONLINE:
                 PLAYER_NAMES[0] = self.__menu.player_name
-                GAME_NAME[0] = self.__menu.game_name
-                self.__game = online_game(game_name=GAME_NAME[0], player_name=PLAYER_NAMES[0], num_players=num_players,
+                self.__game = online_game(game_name=DEFAULT_GAME_NAME[0], player_name=PLAYER_NAMES[0],
+                                          num_players=num_players,
                                           use_advanced_ai=use_advanced_ai, num_turns=num_turns, is_full=is_full,
                                           is_observer=self.__menu.observer, password=self.__menu.password)
             case GameType.ARCHIVED:

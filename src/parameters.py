@@ -7,7 +7,8 @@ BYTES_IN_INT = 4
 DEFAULT_BUFFER_SIZE = 4096
 
 # game name
-GAME_NAME = ['Test game']
+DEFAULT_GAME_NAME = ['Test game']
+CURRENT_GAME_NAME = ['']
 
 # gui constants
 GUI_CAPTION = 'Team Segfault'
@@ -87,6 +88,7 @@ SOUND_VOLUME = [0.1]
 MUSIC_VOLUME = [0.1]
 MAX_PLAYERS = 3
 DEFAULT_NUM_TURNS = 45
+DEFAULT_NUM_TURNS_ONE_PLAYER = 15
 
 import os
 

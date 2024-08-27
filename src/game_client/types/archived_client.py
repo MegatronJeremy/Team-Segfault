@@ -12,7 +12,7 @@ class ArchivedGameClient(GameClient, ABC):
     def __init__(self, file_path: str):
         super().__init__()
 
-        with open(os.path.join(REPLAYS_LOCATION, file_path), 'r') as f:
+        with open(os.path.join(REPLAYS_LOCATION, f'{file_path}.replay'), 'r') as f:
             self.__archive_file = json.load(f)
 
             self.__max_turn: int = (self.__archive_file["0"]["game_state"]["num_turns"] + 1) \

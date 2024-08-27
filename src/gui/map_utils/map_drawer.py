@@ -21,7 +21,7 @@ class MapDrawer:
     def __init__(self, map_size: int, players: dict, game_map: dict, current_turn: list[int], num_turns: int,
                  num_rounds: int):
         self.__turn: list[int] = current_turn
-        self.__num_turns = num_turns
+        self.__num_turns = num_turns // len(players)
         self.__num_rounds = num_rounds
         self.__max_damage_points: int = 0
         self.__players = players
@@ -84,12 +84,13 @@ class MapDrawer:
 
         # display turn
         if self.__turn is not None:
-            text = self.__font.render('Turn: ' + str(self.__turn[0]) + '/' + str(self.__num_turns), True, WHITE)
+            turn = self.__turn[0] // len(self.__players)
+            text = self.__font.render('Turn: ' + str(turn) + '/' + str(self.__num_turns), True, WHITE)
             text_rect = text.get_rect(midtop=(SCREEN_WIDTH // 2, 0))
             screen.blit(text, text_rect)
 
         # display round
-        text = self.__font.render('Round: ' + str(current_round) + '/' + str(self.__num_rounds), True, WHITE)
+        text = self.__font.render('Match: ' + str(current_round) + '/' + str(self.__num_rounds), True, WHITE)
         text_rect = text.get_rect(midbottom=(SCREEN_WIDTH // 2, SCREEN_HEIGHT))
         screen.blit(text, text_rect)
 

@@ -6,10 +6,9 @@ import pygame_menu
 from src.game_presets.game_type_enum import GameType
 from src.gui.map_utils.map_type_enum import MapType
 from src.gui.menus_and_screens.menu_utils import play_menu_music
-from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
+from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, DEFAULT_GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
     MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION
-from src.settings_utils import save_settings
 
 
 class Menu:
@@ -59,7 +58,6 @@ class Menu:
 
     @staticmethod
     def __quit_game():
-        save_settings()
         pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     """Menu creation"""
@@ -130,7 +128,7 @@ class Menu:
                                                maxwidth=10)
         self.__multiplayer_menu.add.text_input('Password:', default='', textinput_id='password', maxwidth=10,
                                                password=True)
-        self.__multiplayer_menu.add.text_input('Game name: ', default=GAME_NAME[0], textinput_id='game_name',
+        self.__multiplayer_menu.add.text_input('Game name: ', default=DEFAULT_GAME_NAME[0], textinput_id='game_name',
                                                maxwidth=10)
         self.__multiplayer_menu.add.text_input('Number of turns: ', input_type=pygame_menu.locals.INPUT_INT, maxchar=2,
                                                textinput_id='num_turns')
@@ -150,10 +148,18 @@ class Menu:
                                 onclose=pygame_menu.events.BACK,
                                 mouse_motion_selection=True, menu_id=f'archived')
 
+        max_length = 40  # Set your max limit for the button text
+
         start_index = page * files_per_page
         end_index = min(start_index + files_per_page, len(replay_files))
+
         for replay_file in replay_files[start_index:end_index]:
-            menu.add.button(replay_file, self.__battle, replay_file)
+            if len(replay_file) > max_length:
+                display_name = replay_file[:max_length - 3] + "..."
+            else:
+                display_name = replay_file
+
+            menu.add.button(display_name, self.__battle, replay_file)
 
         if page > 0:
             menu.add.button('Previous Page', lambda: self.__archived_game_menu._open(
@@ -170,7 +176,7 @@ class Menu:
 
     def __create_archived_game_menu(self) -> None:
         files_per_page = 10  # Adjust this number based on your screen size
-        replay_files = [f for f in os.listdir(REPLAYS_LOCATION) if f.endswith('.replay')]
+        replay_files = [os.path.splitext(f)[0] for f in os.listdir(REPLAYS_LOCATION) if f.endswith('.replay')]
         total_pages = (len(replay_files) - 1) // files_per_page + 1
 
         self.__archived_game_menu = self.__create_page_menu(0, total_pages, files_per_page, replay_files)
@@ -211,11 +217,16 @@ class Menu:
 
         play_menu_music(BATTLE_THEME, MUSIC_VOLUME[0] * 2)
 
+        is_full = self.__local_game_menu.get_widget('full_game').get_value()
+        use_advanced_ai = self.__local_game_menu.get_widget('advanced_ai').get_value()
+        num_players = self.__local_game_menu.get_widget('num_players').get_value()
+        num_turns = int(self.__local_game_menu.get_widget('num_turns').get_value()) * num_players
+
         self.__start_game_function(game_type=game_type,
-                                   is_full=self.__local_game_menu.get_widget('full_game').get_value(),
-                                   use_advanced_ai=self.__local_game_menu.get_widget('advanced_ai').get_value(),
-                                   num_players=self.__local_game_menu.get_widget('num_players').get_value(),
-                                   num_turns=int(self.__local_game_menu.get_widget('num_turns').get_value()),
+                                   is_full=is_full,
+                                   use_advanced_ai=use_advanced_ai,
+                                   num_players=num_players,
+                                   num_turns=num_turns,
                                    replay_file=replay_file)
 
     def disable(self) -> None:
