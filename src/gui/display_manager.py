@@ -32,6 +32,7 @@ class DisplayManager:
         self.__music_paused = False
 
         self.__game = game
+        self.__force_quit = False
 
         self.__clock = pygame.time.Clock()
 
@@ -118,6 +119,7 @@ class DisplayManager:
                 # set the game end
                 if self.__game:
                     self.__game.over.set()
+                    self.__force_quit = True
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     events.remove(event)  # Consume ESCAPE event to avoid menus bugging out
                 if event.type == pygame.QUIT:
@@ -183,8 +185,12 @@ class DisplayManager:
                 players = sorted(filter(lambda x: x[1] is not None, self.__game.player_wins_and_info),
                                  key=lambda x: x[2], reverse=True)
 
-                self.__helper_menu.enable()
-                self.__end_screen.enable()
+                if not self.__force_quit:
+                    self.__helper_menu.enable()
+                    self.__end_screen.enable()
+                else:
+                    self.__force_quit = False
+                    self.__menu.enable()
 
                 self.__finalize_game()
 
@@ -222,3 +228,4 @@ class DisplayManager:
         self.__game = None
         self.__playing = False
         ARCHIVED_GAME_TURN[0] = 0
+        ARCHIVED_GAME_PAUSED[0] = True

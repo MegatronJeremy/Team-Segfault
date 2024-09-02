@@ -25,7 +25,7 @@ class ArchivedGameClient(GameClient, ABC):
         del self.__archive_file
 
     def disconnect(self) -> None:
-        ARCHIVED_GAME_PAUSED[0] = True
+        pass
 
     def login(self, name: str, password: str | None = None, game_name: str | None = None,
               num_turns: int | None = None, num_players: int | None = None,

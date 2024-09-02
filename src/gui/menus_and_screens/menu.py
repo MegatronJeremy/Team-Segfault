@@ -183,6 +183,7 @@ class Menu:
     def __create_archived_game_menu(self) -> None:
         files_per_page = 10  # Adjust this number based on your screen size
         replay_files = [os.path.splitext(f)[0] for f in os.listdir(REPLAYS_LOCATION) if f.endswith('.replay')]
+        replay_files.sort(reverse=True)
         total_pages = (len(replay_files) - 1) // files_per_page + 1
 
         self.__archived_game_menu = self.__create_page_menu(0, total_pages, files_per_page, replay_files)
