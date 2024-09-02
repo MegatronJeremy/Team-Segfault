@@ -5,6 +5,7 @@ from src.game_presets.archived_game import archived_game
 from src.game_presets.local_game import local_game
 from src.game_presets.online_game import online_game
 from src.gui.control_utils.archived_game_ui_controller import ArchivedGameUIController
+from src.gui.control_utils.base_game_ui_controller import BaseGameUIController
 from src.gui.menus_and_screens.end_screen import EndScreen
 from src.gui.menus_and_screens.error_screen import ErrorScreen
 from src.gui.menus_and_screens.helper_menu import HelperMenu
@@ -45,10 +46,13 @@ class DisplayManager:
 
         self.__loading_screen = LoadingScreen()
 
+        self.__base_game_ui_controller = BaseGameUIController(self)
+
         self.__error_screen: ErrorScreen = ErrorScreen()
         self.__end_screen: EndScreen = EndScreen()
         self.__helper_menu: HelperMenu = HelperMenu(self.__menu.enable, self.__error_screen.disable,
-                                                    self.__end_screen.disable)
+                                                    self.__end_screen.disable,
+                                                    self.__base_game_ui_controller.reset_to_default)
 
         if game:
             # I added this part - useful for supporting the tests we already have
@@ -84,6 +88,10 @@ class DisplayManager:
     def __unpause_game():
         ARCHIVED_GAME_PAUSED[0] = False
 
+    def force_close_game(self):
+        self.__game.over.set()
+        self.__force_quit = True
+
     def __start_the_game(self, game_type: GameType,
                          is_full: bool = False,
                          use_advanced_ai: bool = False,
@@ -118,14 +126,17 @@ class DisplayManager:
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 # set the game end
                 if self.__game:
-                    self.__game.over.set()
-                    self.__force_quit = True
+                    self.force_close_game()
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     events.remove(event)  # Consume ESCAPE event to avoid menus bugging out
                 if event.type == pygame.QUIT:
                     self.__running = False
+
+            self.__base_game_ui_controller.handle_mouse_click(event)
+
             if self.__game and self.__game.is_archived:
                 self.__archived_game_ui_controller.handle_mouse_click(event)
+
         return events
 
     def run(self) -> None:
@@ -141,10 +152,13 @@ class DisplayManager:
         players = []
         while self.__running:
             self.__draw_background()
+            self.__base_game_ui_controller.draw(self.__screen)
 
             # draw archived game ui
-            if self.__game and self.__game.is_archived:
-                self.__archived_game_ui_controller.draw(self.__screen)
+            if self.__game:
+                self.__base_game_ui_controller.stop_enabled = True
+                if self.__game.is_archived:
+                    self.__archived_game_ui_controller.draw(self.__screen)
 
             events = self.__check_events()
 
@@ -188,14 +202,17 @@ class DisplayManager:
                 if not self.__force_quit:
                     self.__helper_menu.enable()
                     self.__end_screen.enable()
+                    self.__base_game_ui_controller.disable_everything()
                 else:
                     self.__force_quit = False
                     self.__menu.enable()
+                    self.__base_game_ui_controller.reset_to_default()
 
                 self.__finalize_game()
 
             # draw error/end screen
             if self.__end_screen.enabled:
+                self.__base_game_ui_controller.disable_everything()
                 self.__end_screen.draw_podium(self.__screen, players)
 
             if self.__error_screen.enabled:

@@ -9,7 +9,7 @@ from src.gui.menus_and_screens.menu_utils import play_menu_music
 from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, DEFAULT_GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
     MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION
-from src.settings_utils import save_settings
+from src.settings_utils import save_settings, get_music_volume
 
 
 class Menu:
@@ -59,7 +59,7 @@ class Menu:
     @staticmethod
     def __set_music_volume(value: float) -> None:
         MUSIC_VOLUME[0] = value
-        pygame.mixer.music.set_volume(value)
+        pygame.mixer.music.set_volume(get_music_volume())
         save_settings()
 
     @staticmethod
@@ -84,7 +84,7 @@ class Menu:
         if self.__main_menu.get_width() < MENU_MIN_WIDTH:
             self.__main_menu.resize(MENU_MIN_WIDTH, self.__main_menu.get_height())
 
-        play_menu_music(MENU_THEME, MUSIC_VOLUME[0])
+        play_menu_music(MENU_THEME, get_music_volume())
 
     def __create_options_menu(self) -> None:
         self.__options_menu: pygame_menu.Menu = pygame_menu.Menu('Options', self.__menu_width, self.__menu_height,
@@ -230,13 +230,13 @@ class Menu:
             case _:
                 raise NameError
 
-        play_menu_music(BATTLE_THEME, MUSIC_VOLUME[0] * 2)
+        play_menu_music(BATTLE_THEME, get_music_volume() * 2)
 
     def disable(self) -> None:
         self.__main_menu.disable()
 
     def enable(self) -> None:
-        play_menu_music(MENU_THEME, MUSIC_VOLUME[0])
+        play_menu_music(MENU_THEME, get_music_volume())
 
         # Recreate the menu to show new archived game replay
         self.__create_menu()

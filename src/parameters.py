@@ -57,6 +57,7 @@ LOADING_ANIMATION_LIMIT = 50
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (100, 100, 100)
+RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 GAME_BACKGROUND = (47, 31, 128)
 PLAYER_COLORS = ((224, 206, 70), (70, 191, 224), (201, 26, 40))  # yellow, blue, red; third could be (227, 61, 116)
@@ -87,7 +88,9 @@ PLAYER_NAMES = ['Playa', 'Bot 1', 'Bot 2', 'Bot 3']
 # game speed range is [0.0 - 1.0]; represents (1 - game_speed) seconds slept between turns
 GAME_SPEED = [1.0]
 SOUND_VOLUME = [0.1]
+SOUND_MUTED = [False]
 MUSIC_VOLUME = [0.1]
+MUSIC_MUTED = [False]
 MAX_PLAYERS = 3
 DEFAULT_NUM_TURNS = 45
 DEFAULT_NUM_TURNS_ONE_PLAYER = 15

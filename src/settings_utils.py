@@ -1,6 +1,6 @@
 import json
 
-from src.parameters import ADVANCED_GRAPHICS, MAP_TYPE, GAME_SPEED, SOUND_VOLUME, MUSIC_VOLUME
+from src.parameters import ADVANCED_GRAPHICS, MAP_TYPE, GAME_SPEED, SOUND_VOLUME, MUSIC_VOLUME, MUSIC_MUTED, SOUND_MUTED
 
 
 def save_settings(filename='settings.json'):
@@ -29,3 +29,11 @@ def load_settings(filename='settings.json'):
             MUSIC_VOLUME[0] = settings_file.get('MUSIC_VOLUME')
     except FileNotFoundError:
         print("Settings file not found, using default settings.")
+
+
+def get_music_volume():
+    return MUSIC_VOLUME[0] if not MUSIC_MUTED[0] else 0
+
+
+def get_sound_volume():
+    return SOUND_VOLUME[0] if not SOUND_MUTED[0] else 0

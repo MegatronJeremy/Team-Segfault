@@ -1,7 +1,8 @@
 import pygame
 
-from src.parameters import SOUND_VOLUME, EXPLOSION_IMAGES, EXPLOSION_SOUND, HEX_RADIUS_X, HEX_RADIUS_Y, \
+from src.parameters import EXPLOSION_IMAGES, EXPLOSION_SOUND, HEX_RADIUS_X, HEX_RADIUS_Y, \
     EXPLOSION_IMAGE_SCALE, EXPLOSION_SPEED, ANIMATION_SPEED_MULTIPLIER
+from src.settings_utils import get_sound_volume
 
 
 class Explosion(pygame.sprite.Sprite):
@@ -22,7 +23,7 @@ class Explosion(pygame.sprite.Sprite):
         # self.delay = explosion_delay
 
         self.__sound = pygame.mixer.Sound(EXPLOSION_SOUND)
-        self.__sound.set_volume(SOUND_VOLUME[0])
+        self.__sound.set_volume(get_sound_volume())
         self.__sound_played = False
 
     def update(self) -> None:
