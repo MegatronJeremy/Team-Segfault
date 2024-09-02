@@ -83,8 +83,11 @@ class DisplayManager:
     def __unpause_game():
         ARCHIVED_GAME_PAUSED[0] = False
 
-    def __start_the_game(self, game_type: GameType, is_full: bool, use_advanced_ai: bool,
+    def __start_the_game(self, game_type: GameType,
+                         is_full: bool = False,
+                         use_advanced_ai: bool = False,
                          num_players: int = 1,
+                         game_name=DEFAULT_GAME_NAME[0],
                          num_turns: int | None = None,
                          replay_file: str | None = None) -> None:
         del self.__game
@@ -96,7 +99,7 @@ class DisplayManager:
                                          num_turns=num_turns, is_full=is_full)
             case GameType.ONLINE:
                 PLAYER_NAMES[0] = self.__menu.player_name
-                self.__game = online_game(game_name=DEFAULT_GAME_NAME[0], player_name=PLAYER_NAMES[0],
+                self.__game = online_game(game_name=game_name, player_name=PLAYER_NAMES[0],
                                           num_players=num_players,
                                           use_advanced_ai=use_advanced_ai, num_turns=num_turns, is_full=is_full,
                                           is_observer=self.__menu.observer, password=self.__menu.password)

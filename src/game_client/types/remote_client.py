@@ -98,7 +98,7 @@ class RemoteGameClient(GameClient):
 
         response = self.__receive_response()
         if self.__is_shadow_client:
-            self.__recorded_actions.setdefault(self.__current_turn)["game_actions"] = response
+            self.__recorded_actions.setdefault(self.__current_turn, {})["game_actions"] = response
             self.__recorded_for_current_turn["game_actions"] = True
 
         return response
@@ -111,7 +111,8 @@ class RemoteGameClient(GameClient):
             self.__send_action(Action.TURN)
             self.__receive_response()
 
-            self.__current_turn += 1
+            if self.__is_shadow_client:
+                self.__current_turn += 1
         except TimeoutError:
             return False
         else:

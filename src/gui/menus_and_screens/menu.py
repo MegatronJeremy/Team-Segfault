@@ -9,6 +9,7 @@ from src.gui.menus_and_screens.menu_utils import play_menu_music
 from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, DEFAULT_GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
     MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION
+from src.settings_utils import save_settings
 
 
 class Menu:
@@ -38,23 +39,28 @@ class Menu:
     @staticmethod
     def __set_advanced_graphics(value: bool) -> None:
         ADVANCED_GRAPHICS[0] = value
+        save_settings()
 
     @staticmethod
     def __set_map_type(map_type: tuple[str, int], value: int) -> None:
         MAP_TYPE[0] = value
+        save_settings()
 
     @staticmethod
     def __set_game_speed(value: float) -> None:
         GAME_SPEED[0] = value
+        save_settings()
 
     @staticmethod
     def __set_sound_volume(value: float) -> None:
         SOUND_VOLUME[0] = value
+        save_settings()
 
     @staticmethod
     def __set_music_volume(value: float) -> None:
         MUSIC_VOLUME[0] = value
         pygame.mixer.music.set_volume(value)
+        save_settings()
 
     @staticmethod
     def __quit_game():
@@ -99,7 +105,7 @@ class Menu:
         self.__options_menu.add.range_slider('Music volume', default=MUSIC_VOLUME[0], range_values=(0, 1),
                                              increment=0.1, rangeslider_id='music_volume_slider',
                                              onchange=self.__set_music_volume)
-        self.__options_menu.add.button('Back', pygame_menu.events.BACK)
+        self.__options_menu.add.button('Back', action=pygame_menu.events.BACK)
         Menu.set_menu_size(self.__options_menu)
 
     def __create_local_game_menu(self) -> None:
@@ -207,27 +213,23 @@ class Menu:
 
         match menu_id:
             case 'local':
-                game_type = GameType.LOCAL
+                self.__start_game_function(game_type=GameType.LOCAL,
+                                           is_full=self.__local_game_menu.get_widget('full_game').get_value(),
+                                           num_players=self.__local_game_menu.get_widget('num_players').get_value(),
+                                           num_turns=int(self.__local_game_menu.get_widget('num_turns').get_value()))
             case 'online':
-                game_type = GameType.LOCAL
+                self.__start_game_function(game_type=GameType.ONLINE,
+                                           is_full=self.__multiplayer_menu.get_widget('full_game').get_value(),
+                                           num_players=self.__multiplayer_menu.get_widget('num_players').get_value(),
+                                           game_name=self.__multiplayer_menu.get_widget('game_name').get_value(),
+                                           num_turns=int(self.__multiplayer_menu.get_widget('num_turns').get_value()))
             case 'archived':
-                game_type = GameType.ARCHIVED
+                self.__start_game_function(game_type=GameType.ARCHIVED,
+                                           replay_file=replay_file)
             case _:
                 raise NameError
 
         play_menu_music(BATTLE_THEME, MUSIC_VOLUME[0] * 2)
-
-        is_full = self.__local_game_menu.get_widget('full_game').get_value()
-        use_advanced_ai = self.__local_game_menu.get_widget('advanced_ai').get_value()
-        num_players = self.__local_game_menu.get_widget('num_players').get_value()
-        num_turns = int(self.__local_game_menu.get_widget('num_turns').get_value()) * num_players
-
-        self.__start_game_function(game_type=game_type,
-                                   is_full=is_full,
-                                   use_advanced_ai=use_advanced_ai,
-                                   num_players=num_players,
-                                   num_turns=num_turns,
-                                   replay_file=replay_file)
 
     def disable(self) -> None:
         self.__main_menu.disable()
