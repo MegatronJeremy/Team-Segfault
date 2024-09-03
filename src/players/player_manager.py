@@ -3,6 +3,7 @@ from threading import Semaphore
 
 from src.game_client.game_client import GameClient
 from src.game_client.types.remote_client import RemoteGameClient
+from src.parameters import PLAYER_NAMES_BY_IDX
 from src.players.player import Player
 from src.players.player_factory import PlayerFactory, PlayerTypes
 from src.players.types.bot_player import BotPlayer
@@ -26,7 +27,7 @@ class PlayerManager:
         self.__player_queue: queue = queue.Queue()
 
     def login(self) -> None:
-        self.__shadow_client.login(name=f"{self.__game.game_name}-Team-Segfault-Shadow",
+        self.__shadow_client.login(name="Team-Segfault-Shadow",
                                    game_name=self.__game.game_name,
                                    num_turns=self.__game.num_turns,
                                    num_players=self.__game.max_players,
@@ -132,6 +133,7 @@ class PlayerManager:
         player.add_to_game(user_info, self.__shadow_client)
 
         self.__game.active_players[player.idx] = player
+        PLAYER_NAMES_BY_IDX[player.idx] = player.player_name
 
     def __connect_local_player(self, player: Player) -> None:
         game_client: GameClient = RemoteGameClient()
@@ -145,3 +147,4 @@ class PlayerManager:
         player.add_to_game(user_info, game_client)
 
         self.__game.active_players[player.idx] = player
+        PLAYER_NAMES_BY_IDX[player.idx] = player.player_name

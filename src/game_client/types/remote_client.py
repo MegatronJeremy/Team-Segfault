@@ -1,6 +1,7 @@
 import datetime
 import json
 import os.path
+import random
 import struct
 
 from src.game_client.game_client import GameClient
@@ -54,6 +55,10 @@ class RemoteGameClient(GameClient):
     def login(self, name: str, password: str | None = None, game_name: str | None = None,
               num_turns: int | None = None, num_players: int | None = None,
               is_observer: bool | None = None, is_full: bool | None = None) -> dict:
+        if password is None:
+            seed = random.randint(0, 10000)
+            name = f"{name}-{seed}"
+
         d: dict = {
             "name": name,
             "password": password,

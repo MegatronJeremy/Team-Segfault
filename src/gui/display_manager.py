@@ -104,7 +104,7 @@ class DisplayManager:
 
         match game_type:
             case GameType.LOCAL:
-                self.__game = local_game(num_players=num_players, use_advanced_ai=use_advanced_ai,
+                self.__game = local_game(game_name=game_name, num_players=num_players, use_advanced_ai=use_advanced_ai,
                                          num_turns=num_turns, is_full=is_full)
             case GameType.ONLINE:
                 PLAYER_NAMES[0] = self.__menu.player_name

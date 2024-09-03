@@ -18,7 +18,7 @@ class Tank(Entity, ABC):
                                      tank_info["spawn_position"]["y"],
                                      tank_info["spawn_position"]["z"])
         self.__tank_color = color
-        self.__player_idx: int = player_idx
+        self.player_idx: int = player_idx
         self.__destroyed: bool = False
         self.__used_repair: bool = False
         self._coord: tuple[int, int, int] = (tank_info["position"]["x"],
@@ -61,7 +61,7 @@ class Tank(Entity, ABC):
 
     @property
     def player_id(self) -> int:
-        return self.__player_idx
+        return self.player_idx
 
     @property
     def tank_id(self) -> int:

@@ -10,7 +10,7 @@ class BaseGameUIController:
         self.__display_manager = display_manager
 
         self.stop_enabled = False
-        self.sound_control_enabled = True
+        self.sound_control_enabled = False
 
         # Button dimensions and padding
         button_width = 90
@@ -32,7 +32,9 @@ class BaseGameUIController:
         x_position_mute_sfx = x_position_mute_music + button_width + padding  # Mute SFX button
 
         # Create STOP button with red color
-        self.__button_stop = Button("STOP", x_position_stop, y_position, button_width, button_height, GRAY, RED, WHITE,
+        # THIS LOCATION IS TEMPORARY, ONLY BUTTON STOP IS SHOWN CURRENTLY
+        self.__button_stop = Button("STOP", x_position_mute_sfx, y_position, button_width, button_height, GRAY, RED,
+                                    WHITE,
                                     self.__stop_game)
 
         # Create Mute Music button without an icon
@@ -96,4 +98,4 @@ class BaseGameUIController:
 
     def reset_to_default(self):
         self.stop_enabled = False
-        self.sound_control_enabled = True
+        self.sound_control_enabled = False

@@ -1,7 +1,7 @@
 import pygame
 from pygame import Surface
 
-from src.parameters import FLAG_PATH, TANK_ICON_PATH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE
+from src.parameters import FLAG_PATH, TANK_ICON_PATH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE, PLAYER_NAMES_BY_IDX
 
 
 class Scoreboard:
@@ -50,6 +50,19 @@ class Scoreboard:
                 for point in range(player.capture_points):
                     screen.blit(self.__flag,
                                 (HEX_RADIUS_X[0] + (point + 1) * HEX_RADIUS_X[0], i * (font_size + self.__rad_y_third)))
+
+                # Draw the player name to the right of the flags
+                name_x_position = HEX_RADIUS_X[0] + (player.capture_points + 1) * HEX_RADIUS_X[
+                    0] + 10  # Slight offset to the right of the last flag
+                name_y_position = i * (font_size + self.__rad_y_third)
+
+                # Create a font object and render the player's name
+                font = pygame.font.Font(None, font_size)
+                player_name_surface = font.render(PLAYER_NAMES_BY_IDX[player.idx], True,
+                                                  (255, 255, 255))  # White color for the text
+
+                # Blit the player's name onto the screen
+                screen.blit(player_name_surface, (name_x_position, name_y_position))
 
     def draw_capture_scoreboard_barplot(self, screen: Surface, font, font_size) -> None:
         i = 0

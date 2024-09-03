@@ -8,7 +8,7 @@ from src.gui.map_utils.map_type_enum import MapType
 from src.gui.menus_and_screens.menu_utils import play_menu_music
 from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, DEFAULT_GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
-    MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION
+    MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION, SOUND_MUTED, MUSIC_MUTED
 from src.settings_utils import save_settings, get_music_volume
 
 
@@ -63,6 +63,17 @@ class Menu:
         save_settings()
 
     @staticmethod
+    def __set_mute_music(value: bool) -> None:
+        MUSIC_MUTED[0] = value
+        pygame.mixer.music.set_volume(get_music_volume())
+        save_settings()
+
+    @staticmethod
+    def __set_mute_sound(value: bool) -> None:
+        SOUND_MUTED[0] = value
+        save_settings()
+
+    @staticmethod
     def __quit_game():
         pygame.event.post(pygame.event.Event(pygame.QUIT))
 
@@ -105,6 +116,12 @@ class Menu:
         self.__options_menu.add.range_slider('Music volume', default=MUSIC_VOLUME[0], range_values=(0, 1),
                                              increment=0.1, rangeslider_id='music_volume_slider',
                                              onchange=self.__set_music_volume)
+        self.__options_menu.add.toggle_switch('Mute sound', default=SOUND_MUTED[0],
+                                              toggleswitch_id='mute_sound_checkbox',
+                                              onchange=self.__set_mute_sound)
+        self.__options_menu.add.toggle_switch('Mute music', default=MUSIC_MUTED[0],
+                                              toggleswitch_id='mute_music_checkbox',
+                                              onchange=self.__set_mute_music)
         self.__options_menu.add.button('Back', action=pygame_menu.events.BACK)
         Menu.set_menu_size(self.__options_menu)
 
@@ -114,6 +131,8 @@ class Menu:
                                                                     onclose=pygame_menu.events.BACK,
                                                                     mouse_motion_selection=True, menu_id='local')
         self.__local_game_menu.add.button('Battle!', self.__battle)
+        self.__local_game_menu.add.text_input('Game name: ', default=DEFAULT_GAME_NAME[0], textinput_id='game_name',
+                                              maxwidth=10)
         self.__local_game_menu.add.text_input('Number of turns: ', input_type=pygame_menu.locals.INPUT_INT, maxchar=2,
                                               textinput_id='num_turns')
         self.__local_game_menu.add.range_slider('Number of players', default=MAX_PLAYERS, rangeslider_id='num_players',
@@ -213,17 +232,13 @@ class Menu:
         menu_id = pygame_menu.Menu.get_current(self.__main_menu).get_id()
 
         match menu_id:
-            case 'local':
+            case 'local' | 'online':
                 self.__start_game_function(game_type=GameType.LOCAL,
                                            is_full=self.__local_game_menu.get_widget('full_game').get_value(),
+                                           use_advanced_ai=self.__local_game_menu.get_widget('advanced_ai').get_value(),
                                            num_players=self.__local_game_menu.get_widget('num_players').get_value(),
+                                           game_name=self.__local_game_menu.get_widget('game_name').get_value(),
                                            num_turns=int(self.__local_game_menu.get_widget('num_turns').get_value()))
-            case 'online':
-                self.__start_game_function(game_type=GameType.ONLINE,
-                                           is_full=self.__multiplayer_menu.get_widget('full_game').get_value(),
-                                           num_players=self.__multiplayer_menu.get_widget('num_players').get_value(),
-                                           game_name=self.__multiplayer_menu.get_widget('game_name').get_value(),
-                                           num_turns=int(self.__multiplayer_menu.get_widget('num_turns').get_value()))
             case 'archived':
                 self.__start_game_function(game_type=GameType.ARCHIVED,
                                            replay_file=replay_file)

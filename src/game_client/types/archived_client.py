@@ -32,8 +32,8 @@ class ArchivedGameClient(GameClient, ABC):
               is_observer: bool | None = None, is_full: bool | None = None) -> dict:
 
         # Login should only be possible for the shadow client, no local players should exist here
-        if not name.find("Team-Segfault-Shadow"):
-            raise NameError
+        # if not name.find("Team-Segfault-Shadow"):
+        #     raise NameError
 
         return {}
 

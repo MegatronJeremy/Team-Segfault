@@ -10,6 +10,9 @@ DEFAULT_BUFFER_SIZE = 4096
 DEFAULT_GAME_NAME = ['Test game']
 CURRENT_GAME_NAME = ['']
 
+# player names
+PLAYER_NAMES_BY_IDX: dict[int, str] = {}
+
 # gui constants
 GUI_CAPTION = 'Team Segfault'
 FPS_MAX = 60  # max frames per second
