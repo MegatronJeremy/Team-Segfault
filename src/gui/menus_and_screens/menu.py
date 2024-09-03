@@ -232,13 +232,21 @@ class Menu:
         menu_id = pygame_menu.Menu.get_current(self.__main_menu).get_id()
 
         match menu_id:
-            case 'local' | 'online':
+            case 'local':
                 self.__start_game_function(game_type=GameType.LOCAL,
                                            is_full=self.__local_game_menu.get_widget('full_game').get_value(),
                                            use_advanced_ai=self.__local_game_menu.get_widget('advanced_ai').get_value(),
                                            num_players=self.__local_game_menu.get_widget('num_players').get_value(),
                                            game_name=self.__local_game_menu.get_widget('game_name').get_value(),
                                            num_turns=int(self.__local_game_menu.get_widget('num_turns').get_value()))
+            case 'online':
+                self.__start_game_function(game_type=GameType.ONLINE,
+                                           is_full=self.__multiplayer_menu.get_widget('full_game').get_value(),
+                                           use_advanced_ai=self.__multiplayer_menu.get_widget(
+                                               'advanced_ai').get_value(),
+                                           num_players=self.__multiplayer_menu.get_widget('num_players').get_value(),
+                                           game_name=self.__multiplayer_menu.get_widget('game_name').get_value(),
+                                           num_turns=int(self.__multiplayer_menu.get_widget('num_turns').get_value()))
             case 'archived':
                 self.__start_game_function(game_type=GameType.ARCHIVED,
                                            replay_file=replay_file)
