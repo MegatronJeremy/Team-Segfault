@@ -4,7 +4,7 @@ from pygame import Surface
 from src.gui.menus_and_screens.menu_utils import play_menu_music
 from src.parameters import SCREEN_WIDTH, SCREEN_HEIGHT, TANK_ICON_PATH, PODIUM_COLORS, PODIUM_WIDTH, PODIUM_SCALE, \
     TROPHY_IMAGE_PATH, MENU_FONT, VICTORY_THEME
-from src.settings_utils import get_music_volume
+from src.settings_utils import get_music_volume, strip_number_from_name_end
 
 
 class EndScreen:
@@ -33,7 +33,7 @@ class EndScreen:
         player_points)
         """
         # index representing current podium position that tank should be drawn on
-        current_index = 0
+        current_index = 1
         longest_name_len = 0
 
         # draw tanks / players
@@ -56,7 +56,7 @@ class EndScreen:
 
         # write name and number of points
         for i, player in enumerate(players):
-            name = self.__scoreboard_font.render(player[0], True, player[1])
+            name = self.__scoreboard_font.render(strip_number_from_name_end(player[0]), True, player[1])
             name_rect = name.get_rect()
             x, y = 0, self.__trophy.get_height() * (2 + 2 * i) // 2
             name_rect.topleft = (x, y)

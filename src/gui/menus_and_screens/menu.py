@@ -9,7 +9,7 @@ from src.gui.menus_and_screens.menu_utils import play_menu_music
 from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, DEFAULT_GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
     MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION, SOUND_MUTED, MUSIC_MUTED
-from src.settings_utils import save_settings, get_music_volume
+from src.settings_utils import save_settings, get_music_volume, strip_number_from_name_end
 
 
 class Menu:
@@ -184,7 +184,7 @@ class Menu:
             else:
                 display_name = replay_file
 
-            menu.add.button(display_name, self.__battle, replay_file)
+            menu.add.button(strip_number_from_name_end(display_name), self.__battle, replay_file)
 
         if page > 0:
             menu.add.button('Previous Page', lambda: self.__archived_game_menu._open(

@@ -1,4 +1,5 @@
 import json
+import re
 
 from src.parameters import ADVANCED_GRAPHICS, MAP_TYPE, GAME_SPEED, SOUND_VOLUME, MUSIC_VOLUME, MUSIC_MUTED, SOUND_MUTED
 
@@ -63,3 +64,8 @@ def get_original_game_name_from_filename(filename: str) -> str:
     original_game_name = cleaned_game_name.replace("_", " ")
 
     return original_game_name
+
+
+def strip_number_from_name_end(name: str) -> str:
+    # Match cases like 'Name-123' or 'Name 123' or 'Name_123' at the end of the string
+    return re.sub(r'[\s\-_]\d+$', '', name)

@@ -15,6 +15,7 @@ from src.gui.tank_utils.shot_tank import ShotTank
 from src.gui.tank_utils.tank_drawer import TankDrawer
 from src.parameters import SCREEN_WIDTH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE, MENU_FONT, MAP_FONT_SIZE_MULTIPLIER, \
     ADVANCED_GRAPHICS, SCREEN_HEIGHT, CURRENT_GAME_NAME
+from src.settings_utils import strip_number_from_name_end
 
 
 class MapDrawer:
@@ -95,7 +96,7 @@ class MapDrawer:
         screen.blit(text, text_rect)
 
         # display fps
-        text = self.__font.render(f' Game name: {CURRENT_GAME_NAME[0]}', True, WHITE)
+        text = self.__font.render(f' Game name: {strip_number_from_name_end(CURRENT_GAME_NAME[0])}', True, WHITE)
         text_rect = text.get_rect(bottomleft=(0, SCREEN_HEIGHT))
         screen.blit(text, text_rect)
 

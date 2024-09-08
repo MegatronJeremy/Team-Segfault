@@ -2,6 +2,7 @@ import pygame
 from pygame import Surface
 
 from src.parameters import FLAG_PATH, TANK_ICON_PATH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE, PLAYER_NAMES_BY_IDX
+from src.settings_utils import strip_number_from_name_end
 
 
 class Scoreboard:
@@ -53,12 +54,13 @@ class Scoreboard:
 
                 # Draw the player name to the right of the flags
                 name_x_position = HEX_RADIUS_X[0] + (player.capture_points + 1) * HEX_RADIUS_X[
-                    0] + 10  # Slight offset to the right of the last flag
-                name_y_position = i * (font_size + self.__rad_y_third)
+                    0] + 20  # Slight offset to the right of the last flag
+                name_y_position = i * (
+                        font_size + self.__rad_y_third) + self.__rad_y_third * 1.5  # Slight offset below the flags
 
                 # Create a font object and render the player's name
                 font = pygame.font.Font(None, font_size)
-                player_name_surface = font.render(PLAYER_NAMES_BY_IDX[player.idx], True,
+                player_name_surface = font.render(strip_number_from_name_end(PLAYER_NAMES_BY_IDX[player.idx]), True,
                                                   (255, 255, 255))  # White color for the text
 
                 # Blit the player's name onto the screen
