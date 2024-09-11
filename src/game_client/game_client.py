@@ -53,6 +53,14 @@ class GameClient(ABC):
         pass
 
     @abstractmethod
+    def get_previous_game_state(self) -> dict:
+        """
+        Game state request, returns the previous game state
+        :return: 
+        """
+        pass
+
+    @abstractmethod
     def get_game_actions(self) -> dict:
         """
         Game actions request, returns the actions that happened in the previous turn.

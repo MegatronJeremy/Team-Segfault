@@ -1,13 +1,15 @@
-from threading import Event, Semaphore
+from threading import Semaphore
+
+from pygame.event import Event
 
 from src.entities.entity_enum import Entities
 from src.game_map.hex import Hex
-from src.game_map.map import Map
-from src.players.player import Player
+from src.parameters import DISABLE_ANIMATIONS_GLOBAL
+from src.players.types.remote_player import RemotePlayer
 from src.remote.server_enum import Action
 
 
-class RemotePlayer(Player):
+class ArchivedPlayer(RemotePlayer):
     def __init__(self, turn_played_sem: Semaphore, current_player: list[int], current_turn: list[int],
                  over: Event, game_exited: Event,
                  name: str | None = None, password: str | None = None,
@@ -18,20 +20,11 @@ class RemotePlayer(Player):
                          name=name, password=password,
                          is_observer=is_observer)
 
-    def add_map(self, game_map: Map) -> None:
-        super().add_map(game_map)
-
-    def _make_turn_plays(self) -> None:
-        if self._current_player[0] == self.idx:
-            self._place_actions()
-
-    def _logout(self) -> None:
-        # No need to do anything currently
-        pass
-
     def _place_actions(self) -> None:
         # force the turn end first to make sure the game actions are correct
-        self._game_client.force_turn()
+        if self._current_player[0] == self.idx:
+            if not self._game_client.force_turn():
+                self._map.update_game_state(self._game_client.get_previous_game_state())
 
         game_actions: dict = self._game_client.get_game_actions()
         action_dict = {}
@@ -61,3 +54,5 @@ class RemotePlayer(Player):
                     self._map.local_shoot_tuple(tank, target)
             else:
                 self._map.local_move(tank, target)
+
+        DISABLE_ANIMATIONS_GLOBAL[0] = False

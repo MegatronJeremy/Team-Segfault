@@ -4,13 +4,16 @@ import time
 from abc import ABC
 
 from src.game_client.game_client import GameClient
-from src.parameters import ARCHIVED_GAME_SPEED, MAX_ARCHIVED_GAME_DELAY, MIN_ARCHIVED_GAME_DELAY, ARCHIVED_GAME_TURN, \
-    ARCHIVED_GAME_PAUSED, REPLAYS_LOCATION
+from src.parameters import ARCHIVED_GAME_SPEED, MAX_ARCHIVED_GAME_DELAY, MIN_ARCHIVED_GAME_DELAY, \
+    ARCHIVED_GAME_TURN, \
+    ARCHIVED_GAME_PAUSED, REPLAYS_LOCATION, DISABLE_ANIMATIONS_GLOBAL
 
 
 class ArchivedGameClient(GameClient, ABC):
     def __init__(self, file_path: str):
         super().__init__()
+
+        self.__last_turn: int = 0
 
         with open(os.path.join(REPLAYS_LOCATION, f'{file_path}.replay'), 'r') as f:
             self.__archive_file = json.load(f)
@@ -46,27 +49,53 @@ class ArchivedGameClient(GameClient, ABC):
     def get_game_state(self) -> dict:
         return self.__archive_file[str(self.__current_turn[0])]["game_state"]
 
+    def get_previous_game_state(self) -> dict:
+        if self.__current_turn[0] == 0:
+            return self.__archive_file[str(self.__current_turn[0])]["game_state"]
+
+        return self.__archive_file[str(self.__current_turn[0] - 1)]["game_state"]
+
     def get_game_actions(self) -> dict:
         return self.__archive_file[str(self.__current_turn[0])]["game_actions"]
 
+    def enter_paused_state(self) -> None:
+        while ARCHIVED_GAME_PAUSED[0]:
+            if self.__last_turn != self.__current_turn[0]:
+                break
+            time.sleep(0.01)
+
     def force_turn(self) -> bool:
-        if ARCHIVED_GAME_PAUSED[0]:
-            return False
+        while True:
+            while ARCHIVED_GAME_PAUSED[0]:
+                if self.__last_turn != self.__current_turn[0]:
+                    # Update the last turn
+                    if self.__current_turn[0] < self.__last_turn:
+                        DISABLE_ANIMATIONS_GLOBAL[0] = True
+                    self.__last_turn = self.__current_turn[0]
+                    return False  # State needs to be updated
+                time.sleep(0.01)
 
-        # Split sleep_time into smaller intervals
-        interval: float = 0.01  # Check every 10 milliseconds
-        elapsed: float = 0
+            # Split sleep_time into smaller intervals
+            interval: float = 0.01  # Check every 10 milliseconds
+            elapsed: float = 0
 
-        while elapsed < self.__get_sleep_time():
+            # Loop while elapsed time is less than the sleep time
+            while elapsed < self.__get_sleep_time():
+                if ARCHIVED_GAME_PAUSED[0]:
+                    # If the game is paused, break the inner loop and restart the process
+                    break
+
+                time.sleep(interval)
+                elapsed += interval
+
+            # If the loop was broken due to pause, continue from the start of the outer loop
             if ARCHIVED_GAME_PAUSED[0]:
-                return False
+                continue
 
-            time.sleep(interval)
-            elapsed += interval
-
-        self.__current_turn[0] += 1
-
-        return True
+            # Otherwise, update the last turn and return True
+            self.__current_turn[0] += 1
+            self.__last_turn = self.__current_turn[0]
+            return True
 
     @property
     def __current_turn(self) -> list[int]:

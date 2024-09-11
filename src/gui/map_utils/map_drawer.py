@@ -14,7 +14,7 @@ from src.gui.tank_utils.projectile import Projectile
 from src.gui.tank_utils.shot_tank import ShotTank
 from src.gui.tank_utils.tank_drawer import TankDrawer
 from src.parameters import SCREEN_WIDTH, HEX_RADIUS_X, HEX_RADIUS_Y, WHITE, MENU_FONT, MAP_FONT_SIZE_MULTIPLIER, \
-    ADVANCED_GRAPHICS, SCREEN_HEIGHT, CURRENT_GAME_NAME
+    ADVANCED_GRAPHICS, SCREEN_HEIGHT, CURRENT_GAME_NAME, DISABLE_ANIMATIONS_GLOBAL
 from src.settings_utils import strip_number_from_name_end
 
 
@@ -95,7 +95,7 @@ class MapDrawer:
         text_rect = text.get_rect(midbottom=(SCREEN_WIDTH // 2, SCREEN_HEIGHT))
         screen.blit(text, text_rect)
 
-        # display fps
+        # display game name
         text = self.__font.render(f' Game name: {strip_number_from_name_end(CURRENT_GAME_NAME[0])}', True, WHITE)
         text_rect = text.get_rect(bottomleft=(0, SCREEN_HEIGHT))
         screen.blit(text, text_rect)
@@ -106,32 +106,43 @@ class MapDrawer:
     def __add_sprites(self) -> None:
         # add tank shadows
         while not self.__shot_tanks_group_buf.empty():
-            coords, image_path, color = self.__shot_tanks_group_buf.get()
-            tank: Sprite = ShotTank(coords, image_path, color)
+            coords, image_path, color, shot_ended = self.__shot_tanks_group_buf.get()
+            tank: Sprite = ShotTank(coords, image_path, color, shot_ended)
             self.__shot_tanks_group.add(tank)
 
         # add explosions
         while not self.__explosion_group_buf.empty():
-            coord = self.__explosion_group_buf.get()
-            explosion: Sprite = Explosion(Hex.make_center(coord))
+            coord, shot_ended = self.__explosion_group_buf.get()
+            explosion: Sprite = Explosion(Hex.make_center(coord), shot_ended)
             self.__explosion_group.add(explosion)
 
         # add projectiles
         while not self.__projectile_group_buf.empty():
-            start_pos, end_pos, color = self.__projectile_group_buf.get()
-            projectile: Sprite = Projectile(start_pos, end_pos, color)
+            start_pos, end_pos, color, shot_ended = self.__projectile_group_buf.get()
+            projectile: Sprite = Projectile(start_pos, end_pos, color, shot_ended)
             self.__projectile_group.add(projectile)
 
     """Adding sprites to their group"""
 
-    def add_explosion(self, tank: Tank, target: Tank) -> None:
+    def add_explosion(self, tank: Tank, target: Tank, shot_ended: list[bool]) -> None:
+        if DISABLE_ANIMATIONS_GLOBAL[0]:
+            return
+
         self.__max_damage_points = \
             max(self.__max_damage_points, self.__players[tank.player_id].damage_points)
 
-        self.__explosion_group_buf.put(target.coord)
+        self.__explosion_group_buf.put((target.coord, shot_ended))
 
-    def add_shot(self, start_pos: tuple[int, int], end_pos: tuple[int, int], color: tuple[int, int, int]) -> None:
-        self.__projectile_group_buf.put((start_pos, end_pos, color))
+    def add_shot(self, start_pos: tuple[int, int], end_pos: tuple[int, int], color: tuple[int, int, int],
+                 shot_ended: list[bool]) -> None:
+        if DISABLE_ANIMATIONS_GLOBAL[0]:
+            return
 
-    def add_hitreg(self, coords: tuple[int, int], image_path: str, color: str | tuple[int, int, int] = None):
-        self.__shot_tanks_group_buf.put((coords, image_path, color))
+        self.__projectile_group_buf.put((start_pos, end_pos, color, shot_ended))
+
+    def add_hitreg(self, coords: tuple[int, int], image_path: str, color: str | tuple[int, int, int] = None,
+                   shot_ended: list[bool] = None):
+        if DISABLE_ANIMATIONS_GLOBAL[0]:
+            return
+
+        self.__shot_tanks_group_buf.put((coords, image_path, color, shot_ended))

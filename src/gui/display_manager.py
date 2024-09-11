@@ -13,7 +13,7 @@ from src.gui.menus_and_screens.loading_screen import LoadingScreen
 from src.gui.menus_and_screens.menu import *
 from src.parameters import FPS_MAX, FPS_CURRENT, SCREEN_WIDTH, SCREEN_HEIGHT, BACKGROUND_IMAGE_PATH, GUI_ICON_PATH, \
     GAME_BACKGROUND, GUI_CAPTION, ERROR_FONT_SIZE, ERROR_MESSAGE_COLOR, HEX_RADIUS_Y, ARCHIVED_GAME_TURN, \
-    ARCHIVED_GAME_PAUSED
+    ARCHIVED_GAME_PAUSED, ANIMATION_SPEED_MULTIPLIER, ARCHIVED_GAME_SPEED
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'  # window at center
 
@@ -246,3 +246,5 @@ class DisplayManager:
         self.__playing = False
         ARCHIVED_GAME_TURN[0] = 0
         ARCHIVED_GAME_PAUSED[0] = True
+        ARCHIVED_GAME_SPEED[0] = 0
+        ANIMATION_SPEED_MULTIPLIER[0] = 1.0

@@ -1,7 +1,7 @@
 import pygame
 
 from src.game_map.hex import Hex
-from src.parameters import HEX_RADIUS_Y, HEX_RADIUS_X
+from src.parameters import HEX_RADIUS_Y, HEX_RADIUS_X, ANIMATION_SPEED_MULTIPLIER
 
 # Define the text outline thickness
 outline_thickness = 2
@@ -58,7 +58,9 @@ class TankDrawer(pygame.sprite.Sprite):
         # self.rect.center = Hex.make_center(self.__tank.get_coord())
         new_pos = Hex.make_center(self.__tank.coord)
         if self.rect.center != new_pos:
-            self.__counter = TankDrawer.__timer
+            self.__counter = TankDrawer.__timer * \
+                             (0.2 * ANIMATION_SPEED_MULTIPLIER[0] + 0.8) if self.__tank.was_destroyed \
+                else TankDrawer.__timer
             # coordinates need to be translated so that image is drawn from center (blit only has topleft drawing)
             self.__last_position = (self.rect.center[0] - self.image.get_width() / 2,
                                     self.rect.center[1] - self.image.get_height() / 2)

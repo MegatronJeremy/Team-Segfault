@@ -1,7 +1,7 @@
 from src.gui.control_utils.button import Button
 from src.gui.control_utils.slider import Slider
-from src.parameters import SCREEN_HEIGHT, WHITE, GRAY, BLUE, ARCHIVED_GAME_PAUSED, ARCHIVED_GAME_TURN, SCREEN_WIDTH, \
-    ANIMATION_SPEED_MULTIPLIER, ARCHIVED_GAME_SPEED
+from src.parameters import SCREEN_HEIGHT, WHITE, GRAY, BLUE, ARCHIVED_GAME_PAUSED, SCREEN_WIDTH, \
+    ANIMATION_SPEED_MULTIPLIER, ARCHIVED_GAME_SPEED, ARCHIVED_GAME_TURN
 
 
 class ArchivedGameUIController:

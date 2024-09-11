@@ -125,7 +125,11 @@ class PlayerManager:
         if not user_info["is_observer"]:
             self.__num_players += 1
 
-        player: Player = PlayerFactory.create_player(player_type=PlayerTypes.Remote,
+        player_type = PlayerTypes.Remote
+        if self.__game.is_archived:
+            player_type = PlayerTypes.Archived
+
+        player: Player = PlayerFactory.create_player(player_type=player_type,
                                                      turn_played_sem=self.__turn_played_sem,
                                                      current_player_idx=self.__game.current_player_idx,
                                                      over=self.__game.over, game_exited=self.__game.game_exited)

@@ -8,28 +8,27 @@ from src.settings_utils import get_sound_volume
 class Explosion(pygame.sprite.Sprite):
     __IMAGES = [pygame.image.load(path) for path in EXPLOSION_IMAGES]
 
-    def __init__(self, coord: tuple[int, int]):
+    def __init__(self, coord: tuple[int, int], shot_ended: list[bool]):
         super().__init__()
 
         # image index
         self.index = 0
         # animation counter
         self.counter = 0
-        self.image = Explosion.__IMAGES[self.index]
+        self.image = Explosion.__IMAGES[-1]
         self.rect = self.image.get_rect()
         self.rect.center = (coord[0], coord[1])
 
-        # used for delaying explosion_images if the bullet is too slow; should not be delayed when turns are fast
-        # self.delay = explosion_delay
+        # used for delaying explosion_images if the bullet is too slow
+        self.__shot_ended = shot_ended
 
         self.__sound = pygame.mixer.Sound(EXPLOSION_SOUND)
         self.__sound.set_volume(get_sound_volume())
         self.__sound_played = False
 
     def update(self) -> None:
-        # if self.delay >= 0:
-        #     self.delay -= 1
-        #     return
+        if not self.__shot_ended[0]:
+            return
 
         if self.__sound_played is False:
             self.__sound.play()

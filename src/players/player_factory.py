@@ -3,6 +3,7 @@ from threading import Semaphore, Event
 
 from src.players.player import Player
 from src.players.types.advanced_bot import AdvancedBot
+from src.players.types.archived_player import ArchivedPlayer
 from src.players.types.bot_player import BotPlayer
 from src.players.types.observer import Observer
 from src.players.types.remote_player import RemotePlayer
@@ -13,6 +14,7 @@ class PlayerTypes(Enum):
     Bot = 2
     Observer = 3
     BackupBot = 4
+    Archived = 5
 
 
 class PlayerFactory:
@@ -20,7 +22,8 @@ class PlayerFactory:
         PlayerTypes.Remote: RemotePlayer,
         PlayerTypes.Bot: BotPlayer,
         PlayerTypes.Observer: Observer,
-        PlayerTypes.BackupBot: AdvancedBot
+        PlayerTypes.BackupBot: AdvancedBot,
+        PlayerTypes.Archived: ArchivedPlayer
     }
 
     @staticmethod

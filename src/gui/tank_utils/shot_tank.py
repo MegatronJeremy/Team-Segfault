@@ -8,8 +8,11 @@ class ShotTank(pygame.sprite.Sprite):
     """Class representing a shadow of a tank that has been shot, but not destroyed"""
 
     def __init__(self, coord: tuple[int, int], image_path: str,
-                 color: str | tuple[int, int, int] = SHOT_TANK_OUTLINE_COLOR):
+                 color: str | tuple[int, int, int] = SHOT_TANK_OUTLINE_COLOR,
+                 shot_ended: list[bool] | None = None):
         super().__init__()
+
+        self.__shot_ended = shot_ended
 
         # image index
         self.index = 0
@@ -34,9 +37,8 @@ class ShotTank(pygame.sprite.Sprite):
         self.rect.center = (coord[0], coord[1])
 
     def update(self) -> None:
-        # if self.delay >= 0:
-        #     self.delay -= 1
-        #     return
+        if self.__shot_ended and not self.__shot_ended[0]:
+            return
 
         self.counter += 1
         sign: float = 1.0

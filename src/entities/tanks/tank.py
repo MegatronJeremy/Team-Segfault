@@ -20,6 +20,7 @@ class Tank(Entity, ABC):
         self.__tank_color = color
         self.player_idx: int = player_idx
         self.__destroyed: bool = False
+        self.__was_destroyed: bool = False
         self.__used_repair: bool = False
         self._coord: tuple[int, int, int] = (tank_info["position"]["x"],
                                              tank_info["position"]["y"],
@@ -34,6 +35,7 @@ class Tank(Entity, ABC):
         self.__health_points -= Tank.__damage  # All tanks do 1 damage
         if self.__health_points < 1:
             self.__destroyed = True
+            self.__was_destroyed = True
 
         return self.__destroyed
 
@@ -86,6 +88,12 @@ class Tank(Entity, ABC):
     @property
     def is_destroyed(self) -> bool:
         return self.__destroyed
+
+    @property
+    def was_destroyed(self) -> bool:
+        ret = self.__was_destroyed
+        self.__was_destroyed = False
+        return ret
 
     @property
     def capture_points(self) -> int:

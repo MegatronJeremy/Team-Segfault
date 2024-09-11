@@ -9,7 +9,8 @@ from src.settings_utils import get_sound_volume
 class Projectile(pygame.sprite.Sprite):
     __IMAGE: Surface = pygame.image.load(BULLET_IMAGE_PATH)
 
-    def __init__(self, start_pos: tuple[int, int], end_pos: tuple[int, int], color: tuple[int, int, int] | str):
+    def __init__(self, start_pos: tuple[int, int], end_pos: tuple[int, int], color: tuple[int, int, int] | str,
+                 shot_ended: list[bool]):
         super().__init__()
 
         self.shot_vector = (end_pos[0] - start_pos[0], end_pos[1] - start_pos[1])
@@ -32,6 +33,9 @@ class Projectile(pygame.sprite.Sprite):
         # animation variables
         self.counter: float = 0
 
+        # notify explosion animations with this
+        self.__shot_ended = shot_ended
+
         # sound
         self.__sound = pygame.mixer.Sound(BULLET_SOUND)
         self.__sound.set_volume(get_sound_volume())
@@ -45,6 +49,7 @@ class Projectile(pygame.sprite.Sprite):
 
         if self.counter >= 1:
             self.kill()
+            self.__shot_ended[0] = True
 
         x, y = self.start_pos
         self.rect.center = (round(x + self.counter * self.shot_vector[0]),

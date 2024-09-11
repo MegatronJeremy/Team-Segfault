@@ -47,6 +47,7 @@ ADVANCED_GRAPHICS = [True]
 EXPLOSION_SPEED = 4
 BULLET_TRAVEL_TIME = 6
 ANIMATION_SPEED_MULTIPLIER = [1.0]
+DISABLE_ANIMATIONS_GLOBAL = [False]
 
 PODIUM_WIDTH = SCREEN_WIDTH * 3 / 4
 PODIUM_SCALE = 6
@@ -134,7 +135,7 @@ LIGHT_REPAIR_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'bonuses', 'light_repair
 HARD_REPAIR_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'bonuses', 'hard_repair.png')
 
 FLAG_PATH = os.path.join(ASSETS_LOCATION, 'flag.png')
-EXPLOSION_IMAGES = [os.path.join(ASSETS_LOCATION, 'explosion_images', f'{i}.png') for i in range(7)]
+EXPLOSION_IMAGES = [os.path.join(ASSETS_LOCATION, 'explosion_images', f'{i}.png') for i in range(8)]
 BULLET_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'white_bullet.png')
 
 BACKGROUND_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'menu', 'background.jpg')

@@ -98,6 +98,9 @@ class RemoteGameClient(GameClient):
 
         return response
 
+    def get_previous_game_state(self) -> dict:
+        raise NotImplementedError
+
     def get_game_actions(self) -> dict:
         self.__send_action(Action.GAME_ACTIONS)
 

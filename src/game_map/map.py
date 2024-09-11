@@ -15,6 +15,23 @@ from src.game_map.hex import Hex
 from src.gui.map_utils.map_drawer import MapDrawer
 from src.parameters import HEX_RADIUS_X, HEX_RADIUS_Y, SCREEN_HEIGHT, SCREEN_WIDTH, SHOT_TANK_OUTLINE_COLOR, \
     SHOOTING_TANK_OUTLINE_COLOR
+from pygame import Surface
+
+from mab.data.data_io import DataIO
+from src.entities.map_features.bonuses.catapult import Catapult
+from src.entities.map_features.bonuses.hard_repair import HardRepair
+from src.entities.map_features.bonuses.light_repair import LightRepair
+from src.entities.map_features.feature_factory import FeatureFactory
+from src.entities.map_features.landmarks.base import Base
+from src.entities.map_features.landmarks.empty import Empty
+from src.entities.map_features.landmarks.obstacle import Obstacle
+from src.entities.tanks.tank import Tank
+from src.entities.tanks.tank_factory import TankFactory
+from src.game_map import _a_star
+from src.game_map.hex import Hex
+from src.gui.map_utils.map_drawer import MapDrawer
+from src.parameters import HEX_RADIUS_X, HEX_RADIUS_Y, SCREEN_HEIGHT, SCREEN_WIDTH, SHOT_TANK_OUTLINE_COLOR, \
+    SHOOTING_TANK_OUTLINE_COLOR
 
 
 class Map:
@@ -90,36 +107,27 @@ class Map:
         # Local update of the new turn
         self.__new_turn()
 
-        # At the beginning of each turn move the tanks that have been destroyed in the previous turn to their spawn
+        self.update_game_state(game_state)
+
+    def update_game_state(self, game_state: dict) -> None:
+        self.__current_turn[0] = game_state["current_turn"]
+
         for vehicle_id, vehicle_info in game_state["vehicles"].items():
             server_coord = (vehicle_info["position"]["x"], vehicle_info["position"]["y"], vehicle_info["position"]["z"])
             server_hp, server_cp = vehicle_info['health'], vehicle_info["capture_points"]
 
             tank = self.__tanks[int(vehicle_id)]
 
-            # Ignore this for now
-            # Used to test discrepancies between server and local data
-            # if server_coord != tank.coord:
-            #     print('server_coord', server_coord, 'tank.coord', tank.coord)
-            # if server_hp != tank.health_points:
-            #     print('server_hp', server_hp, 'tank.health_points', tank.health_points, 'tank.player_id'
-            #           , tank.type, tank.player_id)
-            # if server_cp != tank.capture_points:
-            #     print(tank.type, tank.player_id, 'server_cp', server_cp, 'tank.cp', tank.capture_points)
-
             self.local_move(tank, server_coord) if server_coord != tank.coord else None
 
-            # Server hp and cp will always be correct
             tank.health_points = server_hp
             tank.capture_points = server_cp
 
         for player_id, points in game_state["win_points"].items():
             player = self.__players[int(player_id)]
 
-            # capture points and kill points
             server_cp, server_dp = points["capture"], points["kill"]
 
-            # Server cp and dp will always be correct
             player.damage_points = server_dp
             player.capture_points = server_cp
 
@@ -181,7 +189,8 @@ class Map:
         destroyed = target.register_hit_return_destroyed()
 
         source_center = Hex.make_center(tank.coord)
-        self.__map_drawer.add_shot(source_center, Hex.make_center(target.coord), tank.color)
+        shot_ended: list[bool] = [False]
+        self.__map_drawer.add_shot(source_center, Hex.make_center(target.coord), tank.color, shot_ended)
         self.__map_drawer.add_hitreg(source_center, tank.image_path, SHOOTING_TANK_OUTLINE_COLOR)
 
         if destroyed:
@@ -189,13 +198,13 @@ class Map:
             self.__players[tank.player_id].register_destroyed_vehicle(target)
 
             # add explosion
-            self.__map_drawer.add_explosion(tank, target)
+            self.__map_drawer.add_explosion(tank, target, shot_ended)
 
             # add to destroyed tanks
             self.__destroyed.append(target)
         else:
             self.__map_drawer.add_hitreg(self.__map[target.coord]['feature'].center, target.image_path,
-                                         SHOT_TANK_OUTLINE_COLOR)
+                                         SHOT_TANK_OUTLINE_COLOR, shot_ended)
         self.__players[tank.player_id].register_shot(target.player_id)
 
         tank.catapult_bonus = False  # If had catapult bonus remove
