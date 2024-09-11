@@ -122,6 +122,9 @@ VICTORY_THEME = os.path.join(ASSETS_LOCATION, 'music', 'Fanfare.mp3')
 # font path
 MENU_FONT = os.path.join(ASSETS_LOCATION, 'menu', 'BrunoAceSC-Regular.ttf')
 
+# settings file path
+SETTINGS_FILE = os.path.join(SCRIPT_DIR, 'settings.json')
+
 # image paths
 TANK_ICON_PATH = os.path.join(ASSETS_LOCATION, 'tank_icon.png')
 SPG_IMAGE_PATH = os.path.join(ASSETS_LOCATION, 'tank_classes', 'spg.png')

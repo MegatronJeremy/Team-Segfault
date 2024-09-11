@@ -1,11 +1,12 @@
 import json
 import re
 
-from src.parameters import ADVANCED_GRAPHICS, MAP_TYPE, GAME_SPEED, SOUND_VOLUME, MUSIC_VOLUME, MUSIC_MUTED, SOUND_MUTED
+from src.parameters import ADVANCED_GRAPHICS, MAP_TYPE, GAME_SPEED, SOUND_VOLUME, MUSIC_VOLUME, MUSIC_MUTED, \
+    SOUND_MUTED, SETTINGS_FILE
 
 
-def save_settings(filename='settings.json'):
-    with open(filename, 'w') as f:
+def save_settings():
+    with open(SETTINGS_FILE, 'w') as f:
         settings = {
             'ADVANCED_GRAPHICS': ADVANCED_GRAPHICS[0],
             'MAP_TYPE': MAP_TYPE[0],
@@ -20,24 +21,24 @@ def save_settings(filename='settings.json'):
 
 
 # Function to load settings from a file
-def load_settings(filename='settings.json'):
+def load_settings():
     try:
-        with open(filename, 'r') as f:
+        with open(SETTINGS_FILE, 'r') as f:
             settings_file = json.load(f)
 
-            if settings_file.get('ADVANCED_GRAPHICS'):
+            if settings_file.get('ADVANCED_GRAPHICS') is not None:
                 ADVANCED_GRAPHICS[0] = settings_file.get('ADVANCED_GRAPHICS')
-            if settings_file.get('MAP_TYPE'):
+            if settings_file.get('MAP_TYPE') is not None:
                 MAP_TYPE[0] = settings_file.get('MAP_TYPE')
-            if settings_file.get('GAME_SPEED'):
+            if settings_file.get('GAME_SPEED') is not None:
                 GAME_SPEED[0] = settings_file.get('GAME_SPEED')
-            if settings_file.get('SOUND_VOLUME'):
+            if settings_file.get('SOUND_VOLUME') is not None:
                 SOUND_VOLUME[0] = settings_file.get('SOUND_VOLUME')
-            if settings_file.get('MUSIC_VOLUME'):
+            if settings_file.get('MUSIC_VOLUME') is not None:
                 MUSIC_VOLUME[0] = settings_file.get('MUSIC_VOLUME')
-            if settings_file.get('SOUND_MUTED'):
+            if settings_file.get('SOUND_MUTED') is not None:
                 SOUND_MUTED[0] = settings_file.get('SOUND_MUTED')
-            if settings_file.get('MUSIC_MUTED'):
+            if settings_file.get('MUSIC_MUTED') is not None:
                 MUSIC_MUTED[0] = settings_file.get('MUSIC_MUTED')
     except FileNotFoundError:
         print("Settings file not found, using default settings.")
