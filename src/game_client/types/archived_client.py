@@ -6,7 +6,7 @@ from abc import ABC
 from src.game_client.game_client import GameClient
 from src.parameters import ARCHIVED_GAME_SPEED, MAX_ARCHIVED_GAME_DELAY, MIN_ARCHIVED_GAME_DELAY, \
     ARCHIVED_GAME_TURN, \
-    ARCHIVED_GAME_PAUSED, REPLAYS_LOCATION, DISABLE_ANIMATIONS_GLOBAL
+    ARCHIVED_GAME_PAUSED, REPLAYS_LOCATION, DISABLE_ANIMATIONS_GLOBAL, ARCHIVED_GAME_MAX_TURN
 
 
 class ArchivedGameClient(GameClient, ABC):
@@ -18,8 +18,7 @@ class ArchivedGameClient(GameClient, ABC):
         with open(os.path.join(REPLAYS_LOCATION, f'{file_path}.replay'), 'r') as f:
             self.__archive_file = json.load(f)
 
-            self.__max_turn: int = (self.__archive_file["0"]["game_state"]["num_turns"] + 1) \
-                                   * self.__archive_file["0"]["game_state"]["num_rounds"] - 1
+            ARCHIVED_GAME_MAX_TURN[0] = len(self.__archive_file) - 1
 
     def __enter__(self):
         return self
@@ -101,8 +100,8 @@ class ArchivedGameClient(GameClient, ABC):
     def __current_turn(self) -> list[int]:
         if ARCHIVED_GAME_TURN[0] < 0:
             ARCHIVED_GAME_TURN[0] = 0
-        if ARCHIVED_GAME_TURN[0] > self.__max_turn:
-            ARCHIVED_GAME_TURN[0] = self.__max_turn
+        if ARCHIVED_GAME_TURN[0] > ARCHIVED_GAME_MAX_TURN[0]:
+            ARCHIVED_GAME_TURN[0] = ARCHIVED_GAME_MAX_TURN[0]
 
         return ARCHIVED_GAME_TURN
 

@@ -10,10 +10,10 @@ $userChoice = Read-Host "Enter your choice (1 or 2)"
 switch ($userChoice)
 {
     1 {
-        pyinstaller --noconfirm --onedir --console --icon "icon.ico" --name "team_segfault" --optimize "2" --add-data "assets;assets/" --add-data "mab/data/server_data;mab/data/server_data/" --add-data "mab/data/training_data;mab/data/training_data/" --add-data "replays;replays/" main.py
+        pyinstaller --noconfirm --onedir --noconsole --icon "icon.ico" --name "team_segfault" --optimize "2" --add-data "assets;assets/" --add-data "mab/data/server_data;mab/data/server_data/" --add-data "mab/data/training_data;mab/data/training_data/" --add-data "replays;replays/"  main.py
     }
     2 {
-        pyinstaller --noconfirm --onefile --console --icon "icon.ico" --name "team_segfault" --optimize "2" --add-data "assets;assets/" --add-data "mab/data/server_data;mab/data/server_data/" --add-data "mab/data/training_data;mab/data/training_data/" --add-data "replays;replays/" main.py
+        pyinstaller --noconfirm --onefile --noconsole --icon "icon.ico" --name "team_segfault" --optimize "2" --add-data "assets;assets/" --add-data "mab/data/server_data;mab/data/server_data/" --add-data "mab/data/training_data;mab/data/training_data/" --add-data "replays;replays/" main.py
     }
     default {
         Write-Host "Invalid choice. Please enter 1 or 2."

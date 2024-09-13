@@ -8,7 +8,8 @@ from src.gui.map_utils.map_type_enum import MapType
 from src.gui.menus_and_screens.menu_utils import play_menu_music
 from src.parameters import MENU_POSITION, SOUND_VOLUME, PLAYER_NAMES, DEFAULT_GAME_NAME, WHITE, MENU_BACKGROUND_COLOR, \
     MENU_SELECTED_TEXT_COLOR, GAME_SPEED, MENU_MIN_WIDTH, MENU_FONT, ADVANCED_GRAPHICS, SELECTOR_WIDGET_COLOR, \
-    MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION, SOUND_MUTED, MUSIC_MUTED
+    MAX_PLAYERS, MENU_THEME, MUSIC_VOLUME, BATTLE_THEME, MAP_TYPE, REPLAYS_LOCATION, SOUND_MUTED, MUSIC_MUTED, \
+    DEFAULT_NUM_TURNS_ONE_PLAYER
 from src.settings_utils import save_settings, get_music_volume, strip_number_from_name_end
 
 
@@ -133,7 +134,8 @@ class Menu:
         self.__local_game_menu.add.button('Battle!', self.__battle)
         self.__local_game_menu.add.text_input('Game name: ', default=DEFAULT_GAME_NAME[0], textinput_id='game_name',
                                               maxwidth=10)
-        self.__local_game_menu.add.text_input('Number of turns: ', input_type=pygame_menu.locals.INPUT_INT, maxchar=2,
+        self.__local_game_menu.add.text_input('Number of turns: ', default=DEFAULT_NUM_TURNS_ONE_PLAYER,
+                                              input_type=pygame_menu.locals.INPUT_INT, maxchar=2,
                                               textinput_id='num_turns')
         self.__local_game_menu.add.range_slider('Number of players', default=MAX_PLAYERS, rangeslider_id='num_players',
                                                 range_values=[i for i in range(1, MAX_PLAYERS + 1)], increment=1)
@@ -155,7 +157,8 @@ class Menu:
                                                password=True)
         self.__multiplayer_menu.add.text_input('Game name: ', default=DEFAULT_GAME_NAME[0], textinput_id='game_name',
                                                maxwidth=10)
-        self.__multiplayer_menu.add.text_input('Number of turns: ', input_type=pygame_menu.locals.INPUT_INT, maxchar=2,
+        self.__multiplayer_menu.add.text_input('Number of turns: ', default=DEFAULT_NUM_TURNS_ONE_PLAYER,
+                                               input_type=pygame_menu.locals.INPUT_INT, maxchar=2,
                                                textinput_id='num_turns')
         self.__multiplayer_menu.add.range_slider('Number of players', default=MAX_PLAYERS, rangeslider_id='num_players',
                                                  range_values=[i for i in range(1, MAX_PLAYERS + 1)], increment=1)

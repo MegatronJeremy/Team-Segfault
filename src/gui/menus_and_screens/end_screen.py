@@ -33,8 +33,11 @@ class EndScreen:
         player_points)
         """
         # index representing current podium position that tank should be drawn on
-        current_index = 1
+        current_index = 0
         longest_name_len = 0
+
+        # Make sure the points are sorted
+        players.sort(key=lambda x: x[2], reverse=True)
 
         # draw tanks / players
         for i, player in enumerate(players):

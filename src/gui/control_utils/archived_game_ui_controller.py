@@ -1,7 +1,7 @@
 from src.gui.control_utils.button import Button
 from src.gui.control_utils.slider import Slider
 from src.parameters import SCREEN_HEIGHT, WHITE, GRAY, BLUE, ARCHIVED_GAME_PAUSED, SCREEN_WIDTH, \
-    ANIMATION_SPEED_MULTIPLIER, ARCHIVED_GAME_SPEED, ARCHIVED_GAME_TURN
+    ANIMATION_SPEED_MULTIPLIER, ARCHIVED_GAME_SPEED, ARCHIVED_GAME_TURN, ARCHIVED_GAME_MAX_TURN
 
 
 class ArchivedGameUIController:
@@ -71,6 +71,12 @@ class ArchivedGameUIController:
             self.__button_prev.disabled = True
             self.__button_next.disabled = True
 
+        if ARCHIVED_GAME_TURN[0] == 0:
+            self.__button_prev.disabled = True
+
+        if ARCHIVED_GAME_MAX_TURN[0] != 0 and ARCHIVED_GAME_TURN[0] == ARCHIVED_GAME_MAX_TURN[0] - 1:
+            self.__button_next.disabled = True
+
     def __unpause_game(self):
         """Unpause the game and update button states."""
         ARCHIVED_GAME_PAUSED[0] = False
@@ -81,15 +87,15 @@ class ArchivedGameUIController:
         ARCHIVED_GAME_PAUSED[0] = True
         self.update_states()
 
-    @staticmethod
-    def __advance_turn():
+    def __advance_turn(self):
         """Advance to the next turn."""
         ARCHIVED_GAME_TURN[0] += 1
+        self.update_states()
 
-    @staticmethod
-    def __rewind_turn():
+    def __rewind_turn(self):
         """Rewind to the previous turn."""
         ARCHIVED_GAME_TURN[0] -= 1
+        self.update_states()
 
     def handle_mouse_click(self, mouse_pos):
         self.__button_play.check_click(mouse_pos)
