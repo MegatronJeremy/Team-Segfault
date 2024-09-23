@@ -2,7 +2,12 @@
 
 ### Video demonstration 
 
-https://github.com/user-attachments/assets/0a238582-84cc-4986-a244-63797f1bce2a
+https://github.com/user-attachments/assets/0a258d69-1ce8-435f-bc50-671d9f7e71a5
+
+### Presentation in Serbian
+
+[Vuk Đorđević - Prezentacija diplomskog rada.pptx](https://github.com/user-attachments/files/17104345/Vuk.Dordevic.-.Prezentacija.diplomskog.rada.pptx)
+
 
 ### Game description
 
