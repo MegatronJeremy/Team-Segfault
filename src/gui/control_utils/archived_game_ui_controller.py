@@ -74,7 +74,7 @@ class ArchivedGameUIController:
         if ARCHIVED_GAME_TURN[0] == 0:
             self.__button_prev.disabled = True
 
-        if ARCHIVED_GAME_MAX_TURN[0] != 0 and ARCHIVED_GAME_TURN[0] == ARCHIVED_GAME_MAX_TURN[0] - 1:
+        if ARCHIVED_GAME_MAX_TURN[0] != 0 and ARCHIVED_GAME_TURN[0] == ARCHIVED_GAME_MAX_TURN[0]:
             self.__button_next.disabled = True
 
     def __unpause_game(self):

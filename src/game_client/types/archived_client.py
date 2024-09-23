@@ -6,7 +6,7 @@ from abc import ABC
 from src.game_client.game_client import GameClient
 from src.parameters import ARCHIVED_GAME_SPEED, MAX_ARCHIVED_GAME_DELAY, MIN_ARCHIVED_GAME_DELAY, \
     ARCHIVED_GAME_TURN, \
-    ARCHIVED_GAME_PAUSED, REPLAYS_LOCATION, DISABLE_ANIMATIONS_GLOBAL, ARCHIVED_GAME_MAX_TURN
+    ARCHIVED_GAME_PAUSED, REPLAYS_LOCATION, DISABLE_ANIMATIONS_GLOBAL, ARCHIVED_GAME_MAX_TURN, REPLAYS_BEING_SAVED
 
 
 class ArchivedGameClient(GameClient, ABC):
@@ -15,7 +15,13 @@ class ArchivedGameClient(GameClient, ABC):
 
         self.__last_turn: int = 0
 
-        with open(os.path.join(REPLAYS_LOCATION, f'{file_path}.replay'), 'r') as f:
+        replay_path = os.path.join(REPLAYS_LOCATION, f'{file_path}.replay')
+
+        # check if replay is currently being saved
+        if REPLAYS_BEING_SAVED.get(replay_path):
+            REPLAYS_BEING_SAVED[replay_path].wait()
+
+        with open(replay_path, 'r') as f:
             self.__archive_file = json.load(f)
 
             ARCHIVED_GAME_MAX_TURN[0] = len(self.__archive_file) - 1

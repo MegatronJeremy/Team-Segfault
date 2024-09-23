@@ -1,4 +1,6 @@
 # server info
+from threading import Event
+
 HOST_NAME = "wgforge-srv.wargaming.net"
 HOST_PORT = 443
 
@@ -110,6 +112,7 @@ ASSETS_LOCATION = os.path.join(SCRIPT_DIR, '../assets')
 
 # define the base directory for the replays
 REPLAYS_LOCATION = os.path.join(SCRIPT_DIR, '../replays')
+REPLAYS_BEING_SAVED: dict[str, Event] = {}
 
 # sound paths
 EXPLOSION_SOUND = os.path.join(ASSETS_LOCATION, 'sounds', 'explosion.mp3')

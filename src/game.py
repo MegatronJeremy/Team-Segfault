@@ -1,10 +1,11 @@
+import time
 from threading import Thread, Event
 
 from src.game_client.game_client import GameClient
 from src.game_client.types.archived_client import ArchivedGameClient
 from src.game_client.types.remote_client import RemoteGameClient
 from src.game_map.map import Map
-from src.parameters import DEFAULT_ACTION_FILE, CURRENT_GAME_NAME, ARCHIVED_GAME_TURN
+from src.parameters import DEFAULT_ACTION_FILE, CURRENT_GAME_NAME, ARCHIVED_GAME_TURN, ARCHIVED_GAME_PAUSED
 from src.players.player import Player
 from src.players.player_manager import PlayerManager
 
@@ -29,6 +30,7 @@ class Game(Thread):
         self.__num_rounds: int | None = None
         self.__next_round: bool = False
         self.__next_turn: bool = False
+        self.__game_finished: bool = False
 
         self.__round_winner_index: int | None = None
         self.__game_winner_index: int | None = None
@@ -153,12 +155,26 @@ class Game(Thread):
             self.__init_game_state()
 
             while not self.over.is_set():
-                if self.__next_round and not (self.__is_archived_game and ARCHIVED_GAME_TURN[0] <= self.__num_turns):
+                if self.__next_round:
                     # start next round if need be
                     self.__start_next_round()
                 elif self.__next_turn:
                     # just start the next turn
                     self.__start_next_turn()
+
+                if self.__game_finished:
+                    if not (self.__is_archived_game and ARCHIVED_GAME_PAUSED[0]):
+                        # regular state
+                        time.sleep(1)
+                        self.over.set()
+                    else:
+                        # enter paused state for archived game in last turn
+                        while ARCHIVED_GAME_PAUSED[0] and ARCHIVED_GAME_TURN[0] == self.__current_turn[0]:
+                            time.sleep(0.01)
+
+                        # check if turn changed after exiting paused state
+                        if ARCHIVED_GAME_TURN[0] != self.__current_turn[0]:
+                            self.__game_finished = False
 
                 # handshake with players
                 self.__player_manager.handle_player_turns()
@@ -299,7 +315,7 @@ class Game(Thread):
             if game_state["current_round"] == self.__num_rounds:
                 self.__print_player_wins()
                 self.__determine_game_winner()
-                self.over.set()
+                self.__game_finished = True
             else:
                 self.__next_round = True
 

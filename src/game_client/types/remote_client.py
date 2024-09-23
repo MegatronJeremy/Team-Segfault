@@ -3,9 +3,10 @@ import json
 import os.path
 import random
 import struct
+import threading
 
 from src.game_client.game_client import GameClient
-from src.parameters import HOST_PORT, HOST_NAME, BYTES_IN_INT, REPLAYS_LOCATION, CURRENT_GAME_NAME
+from src.parameters import HOST_PORT, HOST_NAME, BYTES_IN_INT, REPLAYS_LOCATION, CURRENT_GAME_NAME, REPLAYS_BEING_SAVED
 from src.remote.server_connection import ServerConnection
 from src.remote.server_enum import Action
 from src.remote.server_enum import Result
@@ -29,26 +30,34 @@ class RemoteGameClient(GameClient):
 
     def disconnect(self) -> None:
         if self.__is_shadow_client:
+            def save_replay(recorded_actions: dict):
+                # Generate a timestamp
+                timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+                # Replace whitespaces in the game name with underscores
+                cleaned_game_name = CURRENT_GAME_NAME[0].replace(" ", "_")
+
+                # Reset current game name
+                CURRENT_GAME_NAME[0] = ''
+
+                # Create a filename with the timestamp first
+                filename = f"{timestamp}_{cleaned_game_name}.replay"
+                save_path = os.path.join(REPLAYS_LOCATION, filename)
+
+                # Save JSON to the generated filename
+                with open(save_path, 'w') as fp:
+                    REPLAYS_BEING_SAVED[save_path] = threading.Event()
+                    json.dump(recorded_actions, fp, indent='\t')
+                    REPLAYS_BEING_SAVED[save_path].set()
+
+                print(f"Replay saved as {filename}")
+
+            # record last actions
             self.__record_unrecorded_actions()
 
-            # Generate a timestamp
-            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-
-            # Replace whitespaces in the game name with underscores
-            cleaned_game_name = CURRENT_GAME_NAME[0].replace(" ", "_")
-
-            # Reset current game name
-            CURRENT_GAME_NAME[0] = ''
-
-            # Create a filename with the timestamp first
-            filename = f"{timestamp}_{cleaned_game_name}.replay"
-            save_path = os.path.join(REPLAYS_LOCATION, filename)
-
-            # Save JSON to the generated filename
-            with open(save_path, 'w') as fp:
-                json.dump(self.__recorded_actions, fp, indent='\t')
-
-            print(f"Replay saved as {filename}")
+            # Create a new thread and start it
+            save_thread = threading.Thread(target=save_replay, args=(self.__recorded_actions,), daemon=False)
+            save_thread.start()
 
         self.__server_connection.disconnect()
 
