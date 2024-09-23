@@ -2,7 +2,7 @@
 
 ### Video demonstration 
 
-https://github.com/user-attachments/assets/5d29d5cd-763f-409b-a1de-836cb29fdd93
+https://github.com/user-attachments/assets/0a238582-84cc-4986-a244-63797f1bce2a
 
 ### Game description
 
