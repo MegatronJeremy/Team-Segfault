@@ -178,6 +178,7 @@ class DisplayManager:
 
                 self.__helper_menu.enable()
                 self.__menu.disable()
+                self.__base_game_ui_controller.disable_everything()
 
                 self.__finalize_game()
 
