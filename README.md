@@ -2,7 +2,9 @@
 
 ### Video demonstration 
 
-https://github.com/user-attachments/assets/0a258d69-1ce8-435f-bc50-671d9f7e71a5
+https://github.com/user-attachments/assets/7717393e-d143-4f0b-9688-54ccc86e8e34
+
+https://github.com/user-attachments/assets/e4973864-c4de-4bf0-b951-d1ec32eecf88
 
 ### Presentation in Serbian
 
