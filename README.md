@@ -2,8 +2,6 @@
 
 ### Video demonstration 
 
-#### Local game and archived game modes
-
 https://github.com/user-attachments/assets/c6e6debf-fd8e-4370-8b6a-e7b8b22585e5
 
 ### Presentation in Serbian
