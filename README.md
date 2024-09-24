@@ -4,11 +4,7 @@
 
 #### Local game and archived game modes
 
-https://github.com/user-attachments/assets/7717393e-d143-4f0b-9688-54ccc86e8e34
-
-#### Multiplayer game with three clients
-
-https://github.com/user-attachments/assets/e4973864-c4de-4bf0-b951-d1ec32eecf88
+https://github.com/user-attachments/assets/c6e6debf-fd8e-4370-8b6a-e7b8b22585e5
 
 ### Presentation in Serbian
 
